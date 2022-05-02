@@ -1,5 +1,21 @@
+# full credit to M Khorasani for streamlit_authenticator
+
 import streamlit as st
 import streamlit_authenticator as stauth
+
+
+# page config
+st.set_page_config(
+     page_title="Stress Tracker",
+     page_icon="🐛",
+     layout="wide",
+     initial_sidebar_state="expanded",
+     menu_items={
+         'Get Help': 'https://www.github.com/',
+         'Report a bug': "https://www.github.com/",
+         'About': ""
+     }
+ )
 
 
 def calcHours(period, ckey):
@@ -24,7 +40,6 @@ passwords = ['welcome123', 'hallo']
 hashed_passwords = stauth.Hasher(passwords).generate()
 
 
-st.set_page_config(layout="wide")
 st.title("STRESS TRACKER")
 
 authenticator = stauth.Authenticate(
@@ -48,13 +63,13 @@ pages = [
 
 if authentication_status:
     with st.sidebar:
-        webpage = st.radio('Options:', pages)
+        webpage = st.radio('Navigation', pages)
         authenticator.logout('Logout', 'main')
 
     if webpage == "Welcome":
         st.write('Hello *%s*! Welcome back' % (st.session_state['name']))
         st.write(
-            "Use the options in the sidepanel to fill in your weekplan or get insight in your performance.")
+            "Use the options in the sidepanel to fill in your weekplan or get insight into your performance.")
 
     elif webpage == "Weekly activity":
         options = st.multiselect(
@@ -100,10 +115,9 @@ if authentication_status:
             st.write("Weekly activity updated")
 
     elif webpage == "Weekly mood":
-        flow, fhigh = st.select_slider(
+        mood_slider = st.select_slider(
             'How did you feel this week?', options=[
-                'Super Stressfull', 'Restless', 'Stressfull', 'Okay', 'Fine', 'Great', 'Amazing'], value=(
-                'Okay', 'Fine'))
+                'Super Stressed', 'Restless', 'Stressed', 'Okay', 'Fine', 'Great', 'Amazing'])
 
         if st.button('Confirm'):
             st.write("Weekly mood updated")
@@ -119,7 +133,7 @@ if authentication_status:
         st.write("view your past performance")
 
 
-elif authentication_status == False:
+elif authentication_status is False:
     st.error('Username/password is incorrect')
 elif authentication_status is None:
     st.warning('Please enter your username and password')
