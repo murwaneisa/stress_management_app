@@ -2,6 +2,7 @@
 
 import streamlit as st
 import streamlit_authenticator as stauth
+import mysql.connector
 
 
 # page config
@@ -16,6 +17,24 @@ st.set_page_config(
          'About': ""
      }
  )
+
+# Initialize connection.
+# Uses st.experimental_singleton to only run once.
+# @st.experimental_singleton
+# def init_connection():
+#     return mysql.connector.connect(**st.secrets["mysql"])
+
+# conn = init_connection()
+
+# Perform query.
+# Uses st.experimental_memo to only rerun when the query changes or after 10 min.
+# @st.experimental_memo(ttl=600)
+# def run_query(query):
+#     with conn.cursor() as cur:
+#         cur.execute(query)
+#         return cur.fetchall()
+
+# rows = run_query("SELECT * from mytable;")
 
 
 def calcHours(period, ckey):
@@ -115,9 +134,23 @@ if authentication_status:
             st.write("Weekly activity updated")
 
     elif webpage == "Weekly mood":
+        mood_options = {
+            1: "Extremely stressed",
+            2: "Overwhelmingly stressed",
+            3: "Very stressed",
+            4: "Overall stressed",
+            5: "A little stressed",
+            6: "Fine",
+            7: "Fairly relaxed",
+            8: "Relaxed",
+            9: "Carefree",
+            10: "Excellent"
+            }
+
         mood_slider = st.select_slider(
-            'How did you feel this week?', options=[
-                'Super Stressed', 'Restless', 'Stressed', 'Okay', 'Fine', 'Great', 'Amazing'])
+            'How did you feel this week?', options=range(1, 11),
+            format_func=lambda x: mood_options.get(x),
+            )
 
         if st.button('Confirm'):
             st.write("Weekly mood updated")
