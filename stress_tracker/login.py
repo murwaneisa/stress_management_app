@@ -41,7 +41,7 @@ import mood_log
 
 
 # styles
-day_header_style = '<p style="color:#7cbe5f; font-size: 20px;">'
+day_header_style = '<p style="color:#7cbe5f; font-size: 40px;">'
 
 
 # users
@@ -89,6 +89,7 @@ if authentication_status:
     elif webpage == "Weekly activity":
         weeklog.weeklog()
         if st.button('Confirm', key='log_ok'):
+            weeklog.on_confirm()
             st.write("Weekly activity updated")
 
     elif webpage == "Weekly mood":
