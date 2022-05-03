@@ -1,5 +1,5 @@
 import streamlit as st
-import login
+import styles
 
 
 class WeeklyLog:
@@ -32,7 +32,8 @@ class WeeklyLog:
         self.cols = st.columns(len(self.days))
         for i, day in enumerate(self.days):
             # i = day
-            header = login.day_header_style + self.days[i] + "</p>"
+            # styles
+            header = styles.day_header_style + self.days[i] + "</p>"
             self.cols[i].markdown(header, unsafe_allow_html=True)
 
             for period in self.periods:
