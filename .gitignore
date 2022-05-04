@@ -1,3 +1,11 @@
+.coverage
+.venv/
+__pycache__
+htmlcov/
+*.pyc
+doc/
+config.ini
+
 # streamlit
 .streamlit/secrets.toml
 devlog.txt
