@@ -1,11 +1,8 @@
 # full credit to M Khorasani for streamlit_authenticator
 
-from numpy import sign
 import streamlit as st
 import streamlit_authenticator as stauth
-import weekly_log
-import mood_log
-import signup
+import weekly_log, mood_log, signup, connector, history
 
 # page config
 st.set_page_config(
@@ -21,14 +18,12 @@ st.set_page_config(
  )
 
 # users
-names = ["Murwan Eisa", "Cameron Toth"]
+names = ["Murwan Eisa", "Cameron Tóth"]
 usernames = ["meisa", "ctoth"]
 passwords = ['welcome123', 'hallo']
 
 # encrypt passwords
 hashed_passwords = stauth.Hasher(passwords).generate()
-
-st.title("STRESS TRACKER")
 
 authenticator = stauth.Authenticate(
     names,
@@ -44,8 +39,11 @@ name, authentication_status, username = authenticator.login('Login', 'main')
 # init objects
 weeklog = weekly_log.WeeklyLog()
 moodlog = mood_log.MoodLog()
-signup = signup.Signup()
+connector = connector.Database()
+signup = signup.Signup(connector)
+history = history.History()
 
+# sidebar menu options
 pages = [
     "Welcome",
     "Weekly activity",
@@ -59,7 +57,7 @@ if authentication_status:
         authenticator.logout('Logout', 'main')
 
     if webpage == "Welcome":
-        st.write('Hello *%s*! Welcome back' % (st.session_state['name']))
+        st.header('Hello *%s*! Welcome back' % (st.session_state['name']))
         st.write(
             "Use the options in the sidepanel to fill in your weekplan or get insight into your performance.")
 
@@ -82,7 +80,7 @@ if authentication_status:
         edit_password = st.text_input('Password', "00000", type="password")
 
     elif webpage == "History":
-        st.write("View your past logs")
+        history.page()
 
 
 elif authentication_status is False:
@@ -91,4 +89,4 @@ elif authentication_status is None:
     st.warning('Please enter your username and password, or sign up below!')
     st.header("Sign up")
     signup.signup()
-    # signup.on_confirm()
+    newemail, newpsw = signup.on_confirm()
