@@ -67,7 +67,7 @@ class Database:
 
 
 connect = Database.connect_database()
-Database.insert_user(
+""" Database.insert_user(
     connect,
     "Ahmed",
     "moh",
@@ -78,7 +78,7 @@ Database.insert_user(
     "ahmed123",
     "21",
     "second year",
-)
+) """
 # Database.insert_admin(connect, "lisa", "adem", "lisa@gmail.com", "lisa123", "IT")
-Database.select_user(connect)
+# Database.select_user(connect)
 # Database.select_admin(connect)
