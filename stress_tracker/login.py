@@ -1,15 +1,17 @@
 # full credit to M Khorasani for streamlit_authenticator
 
+from numpy import sign
 import streamlit as st
 import streamlit_authenticator as stauth
 import weekly_log
 import mood_log
+import signup
 
 # page config
 st.set_page_config(
      page_title="Stress Tracker",
      page_icon="🐛",
-     layout="wide",
+     layout="centered",
      initial_sidebar_state="expanded",
      menu_items={
          'Get Help': 'https://www.github.com/',
@@ -36,11 +38,13 @@ authenticator = stauth.Authenticate(
     'some_signature_key',
     cookie_expiry_days=30)
 
-
+# login widget
 name, authentication_status, username = authenticator.login('Login', 'main')
 
+# init objects
 weeklog = weekly_log.WeeklyLog()
 moodlog = mood_log.MoodLog()
+signup = signup.Signup()
 
 pages = [
     "Welcome",
@@ -84,4 +88,7 @@ if authentication_status:
 elif authentication_status is False:
     st.error('Username/password is incorrect')
 elif authentication_status is None:
-    st.warning('Please enter your username and password')
+    st.warning('Please enter your username and password, or sign up below!')
+    st.header("Sign up")
+    signup.signup()
+    # signup.on_confirm()
