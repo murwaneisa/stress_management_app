@@ -1,23 +1,22 @@
 import configparser
 import mysql.connector
 
-config = configparser.ConfigParser()
-config.read("config.ini")
-
 
 class Database:
     def __init__(self):
         self.connector = None
+        self.config = configparser.ConfigParser()
+        self.config.read("config.ini")
 
     def connect_database(self):
         try:
             self.connector = mysql.connector.connect(
-                host=config.get(
+                host=self.config.get(
                     "database", "db_host_key"
                 ),  # get the credential from the config file
-                user=config.get("database", "db_user_key"),
-                password=config.get("database", "db_password_key"),
-                database=config.get("database", "db_database_key"),
+                user=self.config.get("database", "db_user_key"),
+                password=self.config.get("database", "db_password_key"),
+                database=self.config.get("database", "db_database_key"),
             )
 
         except Exception as er:
@@ -46,7 +45,7 @@ class Database:
                     degree,
                     password,
                     age,
-                    study_year,
+                    study_year
                     ):
         try:
             mycursor = self.connector.cursor()
