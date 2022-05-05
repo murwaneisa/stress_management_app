@@ -8,21 +8,7 @@ class WeeklyLog:
     def __init__(self):
         self.period_checkboxes = {}
         self.hour_checkboxes = {}
-        # self.activity = None
         self.date = None
-        # self.days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-        # self.periods = {"00:00-05:00": [0, 1, 2, 3, 4],
-        #         "05:00-09:00": [5, 6, 7, 8],
-        #         "09:00-17:00": [9, 10, 11, 12, 13, 14, 15, 16],
-        #         "17:00-00:00": [17, 18, 19, 20, 21, 22, 23]}
-        # self.cols = None
-        # self.used_keys = []
-
-    # def calcHours(self, period, ckey):
-    #     total = 0
-    #     for k in self.hour_checkboxes:
-    #         if not self.hour_checkboxes[k]:
-    #             total += 1
 
     # weekly log widget
     def weeklog(self):
