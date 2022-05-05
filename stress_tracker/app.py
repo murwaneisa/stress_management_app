@@ -20,17 +20,21 @@ def main():
     sign_up = signup.SignUp()
 
     if choice == "Login":
-        result = log_in.login_form()
-        if result:
-            print("successfully logged in")
-        else:
-            print("email or password ")
+        try:
+            result = log_in.login_form()
+            if result:
+                st.success(f"successfully logged in as {result[1]} {result[2]}")
+        except Exception as error:
+            st.error(error)
     elif choice == "SignUp":
         sign_up.sign_up_ui()
     elif choice == "Admin":
-        log_in.admin_login_ui()
-    
-    
+        try:
+            result = log_in.admin_login_form()
+            if result:
+                st.success(f"successfully logged in as {result[1]} {result[2]}")
+        except Exception as error:
+            st.error(error)
 
 
 if __name__ == "__main__":

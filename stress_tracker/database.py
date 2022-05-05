@@ -1,4 +1,5 @@
 import configparser
+from distutils.log import error
 import mysql.connector
 
 config = configparser.ConfigParser()
@@ -28,6 +29,11 @@ class Database:
         myresult = mycursor.fetchall()
         if myresult:
             return myresult[0]
+        elif len(myresult) == 0:
+            raise Exception("Username/password is incorrect")
+        else:
+            raise Exception("Unkown error occurred")
+        
     
     def login_admin(self, email, password):
         conn = Database.connect_database(self)
@@ -36,6 +42,10 @@ class Database:
         myresult = mycursor.fetchall()
         if myresult:
             return myresult[0]
+        elif len(myresult) == 0:
+            raise Exception("Username/password is incorrect")
+        else:
+            raise Exception("Unkown error occurred")
 
     def select_user(self):
         conn = Database.connect_database(self)

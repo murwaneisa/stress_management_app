@@ -3,12 +3,10 @@ import database
 
 class Login:
 
-    email_input = ""
-    password_input = ""
-
     def user_login(self, email, password):
         db = database.Database()
-        return db.login_user(email, password)
+        login_user = db.login_user(email, password)
+        return login_user
     
     def admin_login(self, email, password):
         db = database.Database()
@@ -25,13 +23,13 @@ class Login:
                 result = Login.user_login(self, email, password)
                 return result
 
-    def admin_login_ui(self):
+    def admin_login_form(self):
         st.subheader("ADMIN LOGIN")
         with st.form("admin_login_form"):
             email = st.text_input('Email')
             password = st.text_input('Password', type='password')
             submitted = st.form_submit_button("Login")
         
-        if submitted:
+            if submitted:
                 result = Login.admin_login(self, email, password)
                 return result
