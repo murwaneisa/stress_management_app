@@ -1,57 +1,37 @@
-# full credit to M Khorasani for streamlit_authenticator
-
 import streamlit as st
-import streamlit_authenticator as stauth
-from user_profile import user_profile
+import database
 
-# page config
-st.set_page_config(
-    page_title="Stress Tracker",
-    page_icon="🐛",
-    layout="wide",
-    initial_sidebar_state="expanded",
-    menu_items={
-        "Get Help": "https://www.github.com/",
-        "Report a bug": "https://www.github.com/",
-        "About": "",
-    },
-)
+class Login:
 
+    email_input = ""
+    password_input = ""
 
-# styles
-day_header_style = '<p style="color:Green; font-size: 20px;">'
+    def user_login(self, email, password):
+        db = database.Database()
+        return db.login_user(email, password)
+    
+    def admin_login(self, email, password):
+        db = database.Database()
+        return db.login_admin(email, password)
 
-name = "Murwan Eisa"
-user = "meisa"
-passw = "welcome123"
+    def login_form(self):
+        st.subheader("LOGIN")
+        with st.form("login_form"):
+            email = st.text_input('Email')
+            password = st.text_input('Password', type='password')
+            submitted = st.form_submit_button("Login")
 
-# users
-names = [name]
-usernames = [user]
-passwords = [passw]
+            if submitted:
+                result = Login.user_login(self, email, password)
+                return result
 
-# encrypt passwords
-hashed_passwords = stauth.Hasher(passwords).generate()
-
-
-st.title("STRESS TRACKER")
-
-authenticator = stauth.Authenticate(
-    names,
-    usernames,
-    hashed_passwords,
-    "some_cookie_name",
-    "some_signature_key",
-    cookie_expiry_days=30,
-)
-
-
-name, authentication_status, username = authenticator.login("Login", "main")
-
-
-if authentication_status:
-    user_profile()
-elif authentication_status is False:
-    st.error("Username/password is incorrect")
-elif authentication_status is None:
-    st.warning("Please enter your username and password")
+    def admin_login_ui(self):
+        st.subheader("ADMIN LOGIN")
+        with st.form("admin_login_form"):
+            email = st.text_input('Email')
+            password = st.text_input('Password', type='password')
+            submitted = st.form_submit_button("Login")
+        
+        if submitted:
+                result = Login.admin_login(self, email, password)
+                return result
