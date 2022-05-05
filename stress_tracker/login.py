@@ -17,10 +17,16 @@ st.set_page_config(
      }
  )
 
+# session state
+if 'hour_counter' not in st.session_state:
+    st.session_state['hour_counter'] = 0
+# st.session_state['date_counter'] = []
+
+
 # users
-names = ["Murwan Eisa", "Cameron Tóth"]
-usernames = ["meisa", "ctoth"]
-passwords = ['welcome123', 'hallo']
+names = ["Murwan Eisa", "Cameron Tóth", "Test User"]
+usernames = ["meisa", "ctoth", "test"]
+passwords = ['welcome123', 'hallo', 'test']
 
 # encrypt passwords
 hashed_passwords = stauth.Hasher(passwords).generate()
@@ -67,12 +73,12 @@ if authentication_status:
             weeklog.on_confirm()
             st.write("Weekly activity updated")
 
-
     elif webpage == "Weekly mood":
         moodlog.moodlog()
-        if st.button('Confirm', key='mood_ok'):
-            st.write("Weekly mood updated")
         moodlog.add_comments()
+        if st.button('Submit', key='mood_ok'):
+            st.write("Weekly mood updated")
+
 
     elif webpage == "Edit profile":
         st.write("Modify your profile")
