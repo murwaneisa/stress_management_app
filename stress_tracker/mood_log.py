@@ -22,3 +22,7 @@ class MoodLog:
             'How did you feel this week?', options=range(1, 11),
             format_func=lambda x: mood_options.get(x),
             )
+
+    def add_comments(self):
+        st.text_area("Additional comments", height=None, max_chars=None, key=None,
+                     help="Write here anything that's happened this week that might've influenced your stress levels", on_change=None)
