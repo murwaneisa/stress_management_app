@@ -67,10 +67,12 @@ if authentication_status:
             weeklog.on_confirm()
             st.write("Weekly activity updated")
 
+
     elif webpage == "Weekly mood":
         moodlog.moodlog()
         if st.button('Confirm', key='mood_ok'):
             st.write("Weekly mood updated")
+        moodlog.add_comments()
 
     elif webpage == "Edit profile":
         st.write("Modify your profile")
@@ -85,6 +87,7 @@ if authentication_status:
 
 elif authentication_status is False:
     st.error('Username/password is incorrect')
+
 elif authentication_status is None:
     st.warning('Please enter your username and password, or sign up below!')
     st.header("Sign up")

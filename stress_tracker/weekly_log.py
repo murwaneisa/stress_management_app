@@ -28,8 +28,8 @@ class WeeklyLog:
                     "What did you do this week?", [
                         'Study', 'Work', 'Social', 'Hobby', 'Sleep'])
         
-        if "key_str" not in st.session_state:
-            st.session_state.key_str = False
+        if self.used_keys not in st.session_state:
+            st.session_state.used_keys = []
 
     # if "Study" in options:
         st.write("%s TIME" % (self.activity).upper())
@@ -49,9 +49,7 @@ class WeeklyLog:
                     for h in self.periods[period]:
                         time_str = '{:02}:00-{:02}:00'.format(h, h + 1)
                         key_str = str(i) + "_" + str(h)
-                        st.write(key_str not in self.used_keys)
-                        if key_str not in self.used_keys:
-                            
+                        if key_str not in self.used_keys:                            
                             self.hour_checkboxes[key_str] = st.checkbox(label=time_str,
                                                                         key=key_str, value=self.period_checkboxes[period_str])
 
@@ -62,9 +60,16 @@ class WeeklyLog:
             for period in self.periods:
                 for h in self.periods[period]:
                     key_str = str(i) + "_" + str(h)
+                    #st.write(key_str)
+                    st.write(st.session_state[key_str])
                     if self.hour_checkboxes[key_str]:
+                        if not st.session_state[key_str]:
+                            # INSERT i = day, h = 1 hour
+                            st.write("INSERT")
+                            pass
+                        else:
+                            st.write("HEWWO")
                         self.used_keys.append(key_str)
-                        st.write(key_str not in self.used_keys)
                         # st.write(st.session_state['key_str'])
                         # st.write(self.hour_checkboxes[key_str])
-                        # INSERT i = day, h = 1 hour
+        st.write(self.used_keys)
