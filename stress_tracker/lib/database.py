@@ -1,5 +1,5 @@
 import configparser
-
+from distutils.log import error
 import mysql.connector
 
 config = configparser.ConfigParser()
@@ -8,7 +8,7 @@ config.read("config.ini")
 
 
 class Database:
-    def connect_database():
+    def connect_database(self):
         try:
             mydb = mysql.connector.connect(
                 host=config.get(
@@ -22,15 +22,45 @@ class Database:
         except Exception as er:
             print(er)
 
-    def select_user(connect):
-        mycursor = connect.cursor()
+    def login_user(self, email, password):
+        conn = Database.connect_database(self)
+        mycursor = conn.cursor()
+        mycursor.execute(
+            f"SELECT * FROM user WHERE user_email = '{email}' AND user_password = '{password}'"
+        )
+        myresult = mycursor.fetchall()
+        if myresult:
+            return myresult[0]
+        elif len(myresult) == 0:
+            raise Exception("Username/password is incorrect")
+        else:
+            raise Exception("Unkown error occurred")
+
+    def login_admin(self, email, password):
+        conn = Database.connect_database(self)
+        mycursor = conn.cursor()
+        mycursor.execute(
+            f"SELECT * FROM admin WHERE admin_email = '{email}' AND admin_password = '{password}'"
+        )
+        myresult = mycursor.fetchall()
+        if myresult:
+            return myresult[0]
+        elif len(myresult) == 0:
+            raise Exception("Username/password is incorrect")
+        else:
+            raise Exception("Unkown error occurred")
+
+    def select_user(self):
+        conn = Database.connect_database(self)
+        mycursor = conn.cursor()
         mycursor.execute("SELECT * FROM user")
         myresult = mycursor.fetchall()
         for x in myresult:
             print(x)
 
-    def select_admin(connect):
-        mycursor = connect.cursor()
+    def select_admin(self):
+        conn = Database.connect_database(self)
+        mycursor = conn.cursor()
         mycursor.execute("SELECT * FROM admin")
         myresult = mycursor.fetchall()
         for x in myresult:
@@ -66,7 +96,8 @@ class Database:
             print(er)
 
 
-connect = Database.connect_database()
+# connect = Database.connect_database()
+
 """ Database.insert_user(
     connect,
     "Ahmed",
@@ -82,3 +113,6 @@ connect = Database.connect_database()
 # Database.insert_admin(connect, "lisa", "adem", "lisa@gmail.com", "lisa123", "IT")
 # Database.select_user(connect)
 # Database.select_admin(connect)
+# Database.login_user("murwan@gmail.com", "murwan123")
+
+# admin - lisa@gmai.ocm, lisa123
