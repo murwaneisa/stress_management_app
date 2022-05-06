@@ -10,11 +10,14 @@ class WeeklyLog:
         self.hour_checkboxes = {}
         self.date = None
 
+    def on_confirm(self):
+        pass
+
     # weekly log widget
     def weeklog(self):
         if 'hour_counter' not in st.session_state:
             st.session_state['hour_counter'] = 0
-            st.session_state['date_counter'] = []
+            # st.session_state['date_counter'] = []
 
         activities = ['Sleep', 'Study', 'Work', 'Social', 'Hobby']
 
@@ -30,7 +33,10 @@ class WeeklyLog:
         for a in activities:
             hours.append(st.number_input(a, min_value=0, max_value=24, key=a, on_change=None))
         st.session_state['hour_counter'] = sum(hours)
-        st.write("Total amount of hours accounted for: ", st.session_state['hour_counter'])
-
-    def on_confirm(self):
-        pass
+        st.write(f"Total amount of hours accounted for: {st.session_state['hour_counter']}")
+        if st.session_state['hour_counter'] <= 24:
+            if st.button('Confirm'):
+                self.on_confirm()
+                st.write("Weekly activity updated")
+        else:
+            st.write(f"There are less than {st.session_state['hour_counter']} hours in a day!")

@@ -35,7 +35,7 @@ class MoodLog:
                 other_issues.append(a)
         st.write("The following issues are going to be registered: ")
         for i in other_issues:
-            st.write(i)
+            st.write(other_options.get(i))
 
     def add_comments(self):
         st.text_area("Additional comments", height=None, max_chars=None, key=None,

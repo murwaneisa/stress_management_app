@@ -69,9 +69,6 @@ if authentication_status:
 
     elif webpage == "Weekly activity":
         weeklog.weeklog()
-        if st.button('Confirm', key='log_ok'):
-            weeklog.on_confirm()
-            st.write("Weekly activity updated")
 
     elif webpage == "Weekly mood":
         moodlog.moodlog()
@@ -96,6 +93,7 @@ elif authentication_status is False:
 
 elif authentication_status is None:
     st.warning('Please enter your username and password, or sign up below!')
-    st.header("Sign up")
-    signup.signup()
-    newemail, newpsw = signup.on_confirm()
+    if st.button("Sign up"):
+        st.header("Sign up")
+        signup.signup()
+        newemail, newpsw = signup.on_confirm()
