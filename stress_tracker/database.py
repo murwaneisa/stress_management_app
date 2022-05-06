@@ -1,6 +1,7 @@
 import configparser
 from distutils.log import error
 import mysql.connector
+import user
 
 config = configparser.ConfigParser()
 # read the configuration file to get the
@@ -8,6 +9,7 @@ config.read("config.ini")
 
 
 class Database:
+    
     def connect_database(self):
         try:
             mydb = mysql.connector.connect(
@@ -22,19 +24,36 @@ class Database:
         except Exception as er:
             print(er)
 
+    def fetch_users(self):
+        conn = Database.connect_database(self)
+        mycursor = conn.cursor()
+        mycursor.execute("SELECT * FROM user")
+        myresult = mycursor.fetchall()
+        for x in myresult:
+            print(x)
+
+    def fetch_admins(self):
+        conn = Database.connect_database(self)
+        mycursor = conn.cursor()
+        mycursor.execute("SELECT * FROM admin")
+        myresult = mycursor.fetchall()
+        for x in myresult:
+            print(x)
+    
     def login_user(self, email, password):
         conn = Database.connect_database(self)
         mycursor = conn.cursor()
         mycursor.execute(f"SELECT * FROM user WHERE user_email = '{email}' AND user_password = '{password}'")
         myresult = mycursor.fetchall()
         if myresult:
-            return myresult[0]
+            result = myresult[0]
+            usr = user.User(result[0], result[1],result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9])
+            return usr
         elif len(myresult) == 0:
             raise Exception("Username/password is incorrect")
         else:
             raise Exception("Unkown error occurred")
         
-    
     def login_admin(self, email, password):
         conn = Database.connect_database(self)
         mycursor = conn.cursor()
@@ -47,45 +66,20 @@ class Database:
         else:
             raise Exception("Unkown error occurred")
 
-    def select_user(self):
-        conn = Database.connect_database(self)
-        mycursor = conn.cursor()
-        mycursor.execute("SELECT * FROM user")
-        myresult = mycursor.fetchall()
-        for x in myresult:
-            print(x)
-
-    def select_admin(self):
-        conn = Database.connect_database(self)
-        mycursor = conn.cursor()
-        mycursor.execute("SELECT * FROM admin")
-        myresult = mycursor.fetchall()
-        for x in myresult:
-            print(x)
-
-    def insert_user(
-        connect,
-        first_name,
-        last_name,
-        gender,
-        email,
-        program,
-        degree,
-        password,
-        age,
-        study_year,
-    ):
+    def signup_user(self, first_name,last_name,gender,email,program,degree,password,age,study_year):
         try:
-            mycursor = connect.cursor()
+            conn = Database.connect_database(self)
+            mycursor = conn.cursor()
             query = f"""INSERT INTO user (user_firstname, user_lastname, user_gender, user_email, user_program, user_degree, user_password, user_age, user_studyYear)
             VALUES ("{first_name}", "{last_name}", "{gender}", "{email}", "{program}", "{degree}", "{password}", "{age}", "{study_year}")"""
             mycursor.execute(query)
         except Exception as er:
             print(er)
 
-    def insert_admin(connect, first_name, last_name, email, password, title):
+    def signup_admin(self, first_name, last_name, email, password, title):
         try:
-            mycursor = connect.cursor()
+            conn = Database.connect_database(self)
+            mycursor = conn.cursor()
             query = f"""INSERT INTO admin (admin_firstname, admin_lastname, admin_email, admin_password, admin_title)
                 VALUES ("{first_name}", "{last_name}", "{email}", "{password}", "{title}")"""
             mycursor.execute(query)
