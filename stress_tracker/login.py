@@ -5,9 +5,6 @@ import streamlit_authenticator as stauth
 import weekly_log, mood_log, signup, connector, history
 import global_vars
 
-
-
-
 # page config
 st.set_page_config(
      page_title="Stress Tracker",
@@ -35,7 +32,7 @@ signup = signup.Signup(db)
 history = history.History()
 
 
-#make database connection
+# make database connection
 db.connect_database()
 
 usernames = db.getColumnData("user_username","user")
@@ -56,17 +53,13 @@ authenticator = stauth.Authenticate(
 # login widget
 name, authentication_status, username = authenticator.login('Login', 'main')
 
-
-
 # sidebar menu options
-
-
 if authentication_status:
     user_id = st.session_state['name']
-    user_info = db.getUserData(user_id,"user")
-    user_stats = db.getUserData(user_id,"stats")
+    user_info = db.getUserData(user_id, "user")
+    user_stats = db.getUserData(user_id, "stats")
 
-    #get current year and last weeknr
+    # get current year and last weeknr
     current_date = dt.date.today() 
     weeknr = current_date.isocalendar()[1] -1
     year = current_date.isocalendar()[0]
@@ -116,14 +109,13 @@ if authentication_status:
         if st.button('Submit', key='mood_ok'):
             st.write("Weekly mood updated")
 
-
     elif webpage == "Edit profile":
-        #retrieve user data
-        user_info = db.getUserData(user_id,"user")
+        # retrieve user data
+        user_info = db.getUserData(user_id, "user")
 
         st.write("Modify your profile details")
 
-        #text of variables and input options
+        # text of variables and input options
         stat_description = {"user_username":["Username","str"],
                             "user_password":["Password","str"],
                             "user_firstname":["First name","str"],
@@ -135,10 +127,10 @@ if authentication_status:
                             "user_dob":["Date of Birth","date"],
                             "user_studystart":["First year of study","int"]}
 
-        #generate input boxes
+        # generate input boxes
         input = {}
         for stat in stat_description.keys():
-            text,input_option = stat_description[stat]
+            text, input_option = stat_description[stat]
             org_value = user_info[stat][0]
 
             if type(input_option) is list:
@@ -153,7 +145,7 @@ if authentication_status:
             elif input_option == "int":
                 input[stat] = st.number_input(text, min_value=1900, max_value=None, value=org_value, step=None, format=None)
 
-        #confirm changes
+        # confirm changes
         if st.button('Confirm'):
             values = {}
             for stat in input:
@@ -164,18 +156,17 @@ if authentication_status:
                 if org_value != new_value:
                     if stat_description[stat][1] == "int":
                         datatype = "int"
-                    else: 
+                    else:
                         datatype = "str"
 
-                    values[stat] = [new_value,datatype]
-            
-            #update database 
-            db.UpdateUserData(user_id,values,"user")
+                    values[stat] = [new_value, datatype]
+
+            # update database
+            db.UpdateUserData(user_id, values, "user")
             st.write("Profile details updated")
 
     elif webpage == "History":
         history.page()
-
 
 elif authentication_status is False:
     st.error('Username/password is incorrect')
