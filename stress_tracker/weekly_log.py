@@ -1,5 +1,6 @@
 import streamlit as st
-import styles
+# import styles
+from datetime import datetime, timedelta
 
 
 class WeeklyLog:
@@ -7,69 +8,35 @@ class WeeklyLog:
     def __init__(self):
         self.period_checkboxes = {}
         self.hour_checkboxes = {}
-        self.activity = None
-        self.days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-        self.periods = {"00:00-05:00": [0, 1, 2, 3, 4],
-                "05:00-09:00": [5, 6, 7, 8],
-                "09:00-17:00": [9, 10, 11, 12, 13, 14, 15, 16],
-                "17:00-00:00": [17, 18, 19, 20, 21, 22, 23]}
-        self.cols = None
-        self.used_keys = []
+        self.date = None
 
-    def calcHours(self, period, ckey):
-        total = 0
-        for k in self.hour_checkboxes:
-            if not self.hour_checkboxes[k]:
-                total += 1
+    def on_confirm(self):
+        pass
 
     # weekly log widget
     def weeklog(self):
-        self.activity = st.selectbox(
-                    "What did you do this week?", [
-                        'Study', 'Work', 'Social', 'Hobby', 'Sleep'])
-        
-        if self.used_keys not in st.session_state:
-            st.session_state.used_keys = []
+        if 'hour_counter' not in st.session_state:
+            st.session_state['hour_counter'] = 0
+            # st.session_state['date_counter'] = []
 
-    # if "Study" in options:
-        st.write("%s TIME" % (self.activity).upper())
-        self.cols = st.columns(len(self.days))
-        for i, day in enumerate(self.days):
-            # i = day
-            # styles
-            header = styles.day_header_style + self.days[i] + "</p>"
-            self.cols[i].markdown(header, unsafe_allow_html=True)
+        activities = ['Sleep', 'Study', 'Work', 'Social', 'Hobby']
 
-            for period in self.periods:
-                period_str = str(i) + "_" + period
-                self.period_checkboxes[period_str] = self.cols[i].checkbox(
-                    label=period, key=period_str)
+        st.header("Weekly log")
 
-                with self.cols[i].expander("hours"):
-                    for h in self.periods[period]:
-                        time_str = '{:02}:00-{:02}:00'.format(h, h + 1)
-                        key_str = str(i) + "_" + str(h)
-                        if key_str not in self.used_keys:                            
-                            self.hour_checkboxes[key_str] = st.checkbox(label=time_str,
-                                                                        key=key_str, value=self.period_checkboxes[period_str])
+        today = datetime.now()
+        n_days_ago = today - timedelta(days=7)
+        st.subheader("Enter which date your submission applies for:")
+        self.date = st.date_input("Date", value=None, min_value=n_days_ago, max_value=today, key=None)
 
-
-    def on_confirm(self):
-        # for saving user input on confirm
-        for i, day in enumerate(self.days):
-            for period in self.periods:
-                for h in self.periods[period]:
-                    key_str = str(i) + "_" + str(h)
-                    #st.write(key_str)
-                    st.write(st.session_state[key_str])
-                    if self.hour_checkboxes[key_str]:
-                        if not st.session_state[key_str]:
-                            # INSERT i = day, h = 1 hour
-                            st.write("INSERT")
-                            pass
-                        else:
-                            st.write("HEWWO")
-                        self.used_keys.append(key_str)
-                        # st.write(st.session_state['key_str'])
-                        # st.write(self.hour_checkboxes[key_str])
-        st.write(self.used_keys)
+        st.subheader("How many hours did you dedicate to the following?")
+        hours = []
+        for a in activities:
+            hours.append(st.number_input(a, min_value=0, max_value=24, key=a, on_change=None))
+        st.session_state['hour_counter'] = sum(hours)
+        st.write(f"Total amount of hours accounted for: {st.session_state['hour_counter']}")
+        if st.session_state['hour_counter'] <= 24:
+            if st.button('Confirm'):
+                self.on_confirm()
+                st.write("Weekly activity updated")
+        else:
+            st.write(f"There are less than {st.session_state['hour_counter']} hours in a day!")

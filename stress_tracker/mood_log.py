@@ -18,11 +18,26 @@ class MoodLog:
             10: "Excellent"
             }
 
-        self.mood_slider = st.select_slider(
-            'How did you feel this week?', options=range(1, 11),
-            format_func=lambda x: mood_options.get(x),
-            )
+        st.write("How did you feel this week?")
+        self.mood_slider = st.select_slider("", options=range(1, 11),
+            format_func=lambda x: mood_options.get(x))
+
+        other_options = {
+            "migraine": "Migraines",
+            "digestive": "Digestive issues",
+            "insomnia": "Insomnia",
+        }
+
+        st.write("Did you experience any of the following?")
+        other_issues = []
+        for a in other_options:
+            if st.checkbox(other_options.get(a), value=False, key=a, on_change=None):
+                other_issues.append(a)
+        st.write("The following issues are going to be registered: ")
+        for i in other_issues:
+            st.write(other_options.get(i))
 
     def add_comments(self):
         st.text_area("Additional comments", height=None, max_chars=None, key=None,
-                     help="Write here anything that's happened this week that might've influenced your stress levels", on_change=None)
+                     help="Write here anything that's happened this week that might've influenced your stress levels",
+                     on_change=None)
