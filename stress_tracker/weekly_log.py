@@ -23,12 +23,13 @@ class WeeklyLog:
 
         st.header("Weekly log")
 
-        today = datetime.now()
-        n_days_ago = today - timedelta(days=7)
-        st.subheader("Enter which date your submission applies for:")
-        self.date = st.date_input("Date", value=None, min_value=n_days_ago, max_value=today, key=None)
+        # today = datetime.now()
+        # n_days_ago = today - timedelta(days=7)
+        # st.subheader("Enter which date your submission applies for:")
+        # self.date = st.date_input("Date", value=None, min_value=n_days_ago, max_value=today, key=None)
 
-        st.subheader("How many hours did you dedicate to the following?")
+        st.subheader("On avarage, how many hours did you dedicate to the following every day this week?")
+        st.write("You are expected to provide an estimated daily avarage to the best of your abilities.")
         hours = []
         for a in activities:
             hours.append(st.number_input(a, min_value=0, max_value=24, key=a, on_change=None))
