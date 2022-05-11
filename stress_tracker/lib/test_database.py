@@ -9,7 +9,7 @@ config = configparser.ConfigParser()
 config.read("config.ini")
 
 
-class TestGame(unittest.TestCase):
+class TestDatabase(unittest.TestCase):
     def test_connect_database(self):
         try:
             mydb = mysql.connector.connect(
@@ -28,7 +28,7 @@ class TestGame(unittest.TestCase):
         name = "murwan@gmail.com"
         password = "murwan123"
         result = Database.login_user(self, name, password)
-        self.assertIsInstance(result, tuple)
+        self.assertIsInstance(result, int)
 
 
 if __name__ == "__main__":

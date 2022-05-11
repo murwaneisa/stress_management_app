@@ -2,7 +2,7 @@ import unittest
 from user import User
 
 
-class TestGame(unittest.TestCase):
+class TestUser(unittest.TestCase):
     def test_init_default_object(self):
         # Instantiate an object.
         object = User(
