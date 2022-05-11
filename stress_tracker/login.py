@@ -35,9 +35,9 @@ history = history.History()
 # make database connection
 db.connect_database()
 
-usernames = db.getColumnData("user_username","user")
-passwords = db.getColumnData("user_password","user")
-userids = db.getColumnData("user_id","user")
+usernames = db.getColumnData("user_username", "user")
+passwords = db.getColumnData("user_password", "user")
+userids = db.getColumnData("user_id", "user")
 
 # encrypt passwords
 hashed_passwords = stauth.Hasher(passwords).generate()
@@ -60,8 +60,8 @@ if authentication_status:
     user_stats = db.getUserData(user_id, "stats")
 
     # get current year and last weeknr
-    current_date = dt.date.today() 
-    weeknr = current_date.isocalendar()[1] -1
+    current_date = dt.date.today()
+    weeknr = current_date.isocalendar()[1] - 1
     year = current_date.isocalendar()[0]
 
     if weeknr == 0:
@@ -116,16 +116,16 @@ if authentication_status:
         st.write("Modify your profile details")
 
         # text of variables and input options
-        stat_description = {"user_username":["Username","str"],
-                            "user_password":["Password","str"],
-                            "user_firstname":["First name","str"],
-                            "user_lastname":["Last name","str"],
-                            "user_gender":["Gender",global_vars.gender_options],
-                            "user_email":["E-mail","str"],
-                            "user_program":["Course program",global_vars.course_options],
-                            "user_degree":["Degree type",global_vars.degree_options],
-                            "user_dob":["Date of Birth","date"],
-                            "user_studystart":["First year of study","int"]}
+        stat_description = {"user_username": ["Username", "str"],
+                            "user_password": ["Password", "str"],
+                            "user_firstname": ["First name", "str"],
+                            "user_lastname": ["Last name", "str"],
+                            "user_gender": ["Gender", global_vars.gender_options],
+                            "user_email": ["E-mail", "str"],
+                            "user_program": ["Course program", global_vars.course_options],
+                            "user_degree": ["Degree type", global_vars.degree_options],
+                            "user_dob": ["Date of Birth", "date"],
+                            "user_studystart": ["First year of study", "int"]}
 
         # generate input boxes
         input = {}
@@ -134,7 +134,7 @@ if authentication_status:
             org_value = user_info[stat][0]
 
             if type(input_option) is list:
-                input[stat] = st.selectbox(text, input_option,index=input_option.index(org_value))
+                input[stat] = st.selectbox(text, input_option, index=input_option.index(org_value))
             elif input_option == "date":
                 input[stat] = st.date_input(text, value=org_value, min_value=dt.datetime(1900, 1, 1))
             elif input_option == "str":
@@ -143,7 +143,7 @@ if authentication_status:
                 else:
                     input[stat] = st.text_input(text, max_chars=70, value=org_value)
             elif input_option == "int":
-                input[stat] = st.number_input(text, min_value=1900, max_value=None, value=org_value, step=None, format=None)
+                input[stat] = st.number_input(text, min_value=1900, max_value=None, value=org_value)
 
         # confirm changes
         if st.button('Confirm'):

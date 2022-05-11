@@ -26,9 +26,21 @@ class MoodLog:
             "migraine": "Migraines",
             "digestive": "Digestive issues",
             "insomnia": "Insomnia",
+            "energy": "Low energy",
+            "financial": "Financial troubles",
+            "relationship": "Relationship issues",
+        }
+        
+        frequency = {
+            0: "Prefer not to say",
+            1: "Not at all",
+            2: "Once or twice",
+            3: "Sometimes",
+            4: "Frequently",
+            5: "All the time"
         }
 
-        st.write("Did you experience any of the following?")
+        st.write("How often did you experience the following:")
         other_issues = []
         for a in other_options:
             if st.checkbox(other_options.get(a), value=False, key=a, on_change=None):
