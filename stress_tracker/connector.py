@@ -43,7 +43,7 @@ class Database:
             columns.append(colname)
             data[colname] = []
 
-        mc.execute("SELECT * FROM "+str(table)+" WHERE "+user_column+" ="+str(user_id))
+        mc.execute("SELECT * FROM "+str(table)+" WHERE "+user_column+ "="+str(user_id))
         result = mc.fetchall()
 
         for record in result:

@@ -69,8 +69,15 @@ if authentication_status:
         date = dt.date(year, 12, 31)
         weeknr = date.isocalendar()[1]
 
-    lastrec_year = user_stats['stats_year'][-1]
-    lastrec_weeknr = user_stats['stats_weeknr'][-1]
+    # check if user_stats is empty
+    if user_stats['stats_year']:
+        st.write(user_stats)
+        lastrec_year = user_stats['stats_year'][-1]
+        lastrec_weeknr = user_stats['stats_weeknr'][-1]
+
+    else:
+        lastrec_year = None
+        lastrec_weeknr = None
 
     if (year == lastrec_year) and (weeknr == lastrec_weeknr):
         give_feedback = False
