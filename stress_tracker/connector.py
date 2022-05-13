@@ -3,7 +3,7 @@ import mysql.connector
 
 
 class Database:
-    def __init__(self,config_file="config.ini"):
+    def __init__(self, config_file="config.ini"):
         self.connector = None
         self.config = configparser.ConfigParser()
         self.config.read(config_file)
@@ -21,21 +21,22 @@ class Database:
 
         except Exception as er:
             print(er)
-    
 
-    def getUserData(self,user_id,table):
+    def getUserData(self, user_id, table):
         mc = self.connector.cursor()
 
         if table == "user":
             user_column = "user_id"
-        elif table == "stats":
+        elif table in ["stats","avg_stats"]:
             user_column = "stats_userid"
+        elif table == "admin":
+            user_column = "admin_id"
 
-        #retrieve column data 
+        # retrieve column data
         mc.execute("show columns from "+str(table))
         result = mc.fetchall()
 
-        #retrieve user data
+        # retrieve user data
         columns = []
         data = {}
 
@@ -43,18 +44,17 @@ class Database:
             colname = record[0]
             columns.append(colname)
             data[colname] = []
-            
+
         mc.execute("SELECT * FROM "+str(table)+" WHERE "+user_column+" ="+str(user_id))
         result = mc.fetchall()
 
         for record in result:
-            for i,value in enumerate(record):
+            for i, value in enumerate(record):
                 data[columns[i]].append(value)
 
         return data
-    
 
-    def getColumnData(self,column,table):
+    def getColumnData(self, column, table):
         mc = self.connector.cursor()
 
         mc.execute("SELECT "+column+" FROM "+table)
@@ -64,52 +64,54 @@ class Database:
 
         for record in result:
             data.append(record[0])
-        
+
         return data
 
-
-    def UpdateUserData(self,user_id,values,table):
+    def UpdateUserData(self, user_id, values, table):
         mc = self.connector.cursor()
 
         if table == "user":
             user_column = "user_id"
         elif table == "stats":
             user_column = "stats_userid"
-        
+        elif table == "admin":
+            user_column = "admin_id"
+
         sql = "UPDATE "+table+" SET "
         for v in values.keys():
             if values[v][1] == "int":
-                text = v +" =" + str(values[v][0])
+                text = v + " = " + str(values[v][0])
             else:
-                text = v +" ='"+str(values[v][0])+"'"
-            
+                text = v + " ='"+str(values[v][0])+"'"
+
             sql += text + ","
-        
+
         sql = sql[0:-1] + " WHERE "+user_column+"="+str(user_id)
         print(sql)
         mc.execute(sql)
         self.connector.commit()
 
+    def InsertData(self, values, table):
+        mc = self.connector.cursor()
 
-    def InsertData(self,values,table):
         text_names = " ("
         text_values = " VALUES ("
         for v in values.keys():
             text_names += str(v)+","
             if values[v][1] == "int":
                 print(values[v][1])
-                text_values += v +" =" + str(values[v][0]) + ","  
+                text_values += v + " =" + str(values[v][0]) + ","
             else:
-                text_values = v +" ='"+str(values[v][0])+"'" + ","  
-            
+                text_values = v + " ='"+str(values[v][0])+"'" + ","
+
         text_names = text_names[0:-1]+")"
         text_values = text_values[0:-1]+")"
 
         sql = "INSERT INTO "+table+text_names+text_values
 
         mc.execute(sql)
-        self.connector.commit()   
-    
+        self.connector.commit()
+
     def select_admin(self):
         mycursor = self.connector.cursor()
         mycursor.execute("SELECT * FROM admin")
