@@ -45,7 +45,7 @@ class Database:
             columns.append(colname)
             data[colname] = []
 
-        mc.execute("SELECT * FROM "+str(table)+" WHERE "+user_column+" ="+str(user_id))
+        mc.execute("SELECT * FROM "+str(table)+" WHERE "+user_column+ "="+str(user_id))
         result = mc.fetchall()
 
         for record in result:
@@ -74,8 +74,10 @@ class Database:
             user_column = "user_id"
         elif table == "stats":
             user_column = "stats_userid"
+
         elif table == "admin":
             user_column = "admin_id"
+
 
         sql = "UPDATE "+table+" SET "
         for v in values.keys():

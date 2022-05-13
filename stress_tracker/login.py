@@ -5,11 +5,9 @@ import streamlit_authenticator as stauth
 import weekly_log, mood_log, signup, connector, history, avg_weekplan, studentstats
 import global_vars
 
-
 @st.cache(allow_output_mutation=True)
 def get_data():
     return []
-
 
 # page config
 st.set_page_config(
@@ -34,15 +32,12 @@ if 'hour_counter' not in st.session_state:
 db = connector.Database("test_config.ini")
 signup = signup.Signup(db)
 
-
-
 # make database connection
 db.connect_database()
 
-#user data
-usernames = db.getColumnData("user_username","user")
-userpasswords = db.getColumnData("user_password","user")
-userids = db.getColumnData("user_id","user")
+usernames = db.getColumnData("user_username", "user")
+passwords = db.getColumnData("user_password", "user")
+userids = db.getColumnData("user_id", "user")
 
 #admin data
 adminnames = db.getColumnData("admin_username","admin")
@@ -74,6 +69,7 @@ name, authentication_status, username = authenticator.login('Login', 'main')
 # sidebar menu options
 if authentication_status:
     user_id = st.session_state['name']
+
     user_name = st.session_state['username']
     user_type = "user"
     if user_name in adminnames:
@@ -100,9 +96,15 @@ if authentication_status:
             year -= 1
             date = dt.date(year, 12, 31)
             weeknr = date.isocalendar()[1]
+        # check if user_stats is empty
+        if user_stats['stats_year']:
+            st.write(user_stats)
+            lastrec_year = user_stats['stats_year'][-1]
+            lastrec_weeknr = user_stats['stats_weeknr'][-1]
 
-        lastrec_year = user_stats['stats_year'][-1]
-        lastrec_weeknr = user_stats['stats_weeknr'][-1]
+        else:
+            lastrec_year = None
+            lastrec_weeknr = None
 
         if (year == lastrec_year) and (weeknr == lastrec_weeknr):
             give_feedback = False
@@ -125,7 +127,6 @@ if authentication_status:
             active_program,active_degree = get_data()[-1]
         else:
             active_program,active_degree = "All","All"
-        
 
         pages = ["Welcome",
                  "Avg. weekplan",
@@ -198,13 +199,13 @@ if authentication_status:
                                 "user_degree":["Degree type",global_vars.degree_options],
                                 "user_dob":["Date of Birth","date"],
                                 "user_studystart":["First year of study","int"]}
+
         elif user_type == "admin":
             stat_description = {"admin_username":["Username","str"],
                                 "admin_password":["Password","str"],
                                 "admin_firstname":["First name","str"],
                                 "admin_lastname":["Last name","str"],
                                 "admin_email":["E-mail","str"]}            
-
 
         # generate input boxes
         input = {}
@@ -213,7 +214,7 @@ if authentication_status:
             org_value = user_info[stat][0]
 
             if type(input_option) is list:
-                input[stat] = st.selectbox(text, input_option,index=input_option.index(org_value))
+                input[stat] = st.selectbox(text, input_option, index=input_option.index(org_value))
             elif input_option == "date":
                 input[stat] = st.date_input(text, value=org_value, min_value=dt.datetime(1900, 1, 1))
             elif input_option == "str":
@@ -222,7 +223,7 @@ if authentication_status:
                 else:
                     input[stat] = st.text_input(text, max_chars=70, value=org_value)
             elif input_option == "int":
-                input[stat] = st.number_input(text, min_value=1900, max_value=None, value=org_value, step=None, format=None)
+                input[stat] = st.number_input(text, min_value=1900, max_value=None, value=org_value)
 
         # confirm changes
         if st.button('Confirm'):
@@ -242,6 +243,7 @@ if authentication_status:
 
             # update database
             db.UpdateUserData(user_id, values, user_type)
+
             st.write("Profile details updated")
 
     elif webpage == "History":

@@ -61,7 +61,6 @@ VALUES (1,2,2022,15,8,30,8,4,2,4,4,0,0,0,0),
 (7,3,2022,17,4,20,0,6,3,6,3,1,0,0,0),
 (8,3,2022,18,8,25,0,10,3,8,5,0,0,3,0);
 
-
 CREATE TABLE `admin` (
 admin_id int(11) NOT NULL AUTO_INCREMENT,
 admin_username varchar(70),
@@ -95,5 +94,3 @@ VALUES (1,1,0,'Computer Science','Bachelor',8,30,0,5,2,5),
 (2,1,1,'Computer Science','Bachelor',12,45,16,10,10,10),
 (3,1,0,'Default','Default',8,30,0,5,2,5),
 (4,1,1,'Default','Default',12,45,16,10,10,10);
-
-
