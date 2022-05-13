@@ -23,9 +23,9 @@ user_studystart int(4),
 PRIMARY KEY (user_id))ENGINE=INNODB;
 
 INSERT INTO `user` (user_id,user_username,user_firstname,user_lastname,user_gender,user_email, user_program,user_degree,user_password,user_dob,user_studystart)
-VALUES (1,'test','Test','User','X','test@hotmail.com','Computer Science','Bachelor (first cycle)','test','1900-1-1',2021),
-(2,'meisa','Murwan','Eisa','M','meisa@hotmail.com','Computer Science','Bachelor (first cycle)','welcome123','1990-1-1',2021),
-(3,'ctoth','Cameron','Toth','F','toth123@hotmail.com','Computer Science','Bachelor (first cycle)','hallo','1995-1-1',2021);
+VALUES (1,'test','Test','User','X','test@hotmail.com','Computer Science','Bachelor','test','1900-1-1',2021),
+(2,'meisa','Murwan','Eisa','M','meisa@hotmail.com','Computer Science','Bachelor','welcome123','1990-1-1',2021),
+(3,'ctoth','Cameron','Toth','F','toth123@hotmail.com','Computer Science','Bachelor','hallo','1995-1-1',2021);
 
 
 -- Create Stats table --
@@ -61,5 +61,36 @@ VALUES (1,2,2022,15,8,30,8,4,2,4,4,0,0,0,0),
 (7,3,2022,17,4,20,0,6,3,6,3,1,0,0,0),
 (8,3,2022,18,8,25,0,10,3,8,5,0,0,3,0);
 
+CREATE TABLE `admin` (
+admin_id int(11) NOT NULL AUTO_INCREMENT,
+admin_username varchar(70),
+admin_firstname varchar(70),
+admin_lastname varchar(70),
+admin_email varchar(70),
+admin_password varchar(100),
+PRIMARY KEY (admin_id))ENGINE=INNODB;
+
+INSERT INTO `admin` (admin_id,admin_username,admin_firstname,admin_lastname,admin_email,admin_password)
+VALUES (1,'kallej','Kalle','Johan','kallej@hotmail.com','test');
 
 
+CREATE TABLE `avg_stats` (
+stats_id int(11) NOT NULL AUTO_INCREMENT,
+stats_userid int(11),
+stats_bound int(1),
+stats_program varchar(130),
+stats_degree varchar(130),
+stats_sleep int(4),
+stats_study int(4),
+stats_work int(4),
+stats_social int(4),
+stats_sport int(4),
+stats_hobby int(4),
+PRIMARY KEY (stats_id),
+FOREIGN KEY (stats_userid) REFERENCES admin(admin_id))ENGINE=INNODB;
+
+INSERT INTO `avg_stats` (stats_id,stats_userid,stats_bound,stats_program,stats_degree,stats_sleep,stats_study,stats_work,stats_social,stats_sport,stats_hobby)
+VALUES (1,1,0,'Computer Science','Bachelor',8,30,0,5,2,5),
+(2,1,1,'Computer Science','Bachelor',12,45,16,10,10,10),
+(3,1,0,'Default','Default',8,30,0,5,2,5),
+(4,1,1,'Default','Default',12,45,16,10,10,10);

@@ -27,8 +27,10 @@ class Database:
 
         if table == "user":
             user_column = "user_id"
-        elif table == "stats":
+        elif table in ["stats","avg_stats"]:
             user_column = "stats_userid"
+        elif table == "admin":
+            user_column = "admin_id"
 
         # retrieve column data
         mc.execute("show columns from "+str(table))
@@ -72,6 +74,10 @@ class Database:
             user_column = "user_id"
         elif table == "stats":
             user_column = "stats_userid"
+
+        elif table == "admin":
+            user_column = "admin_id"
+
 
         sql = "UPDATE "+table+" SET "
         for v in values.keys():
