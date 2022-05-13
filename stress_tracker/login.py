@@ -36,7 +36,7 @@ signup = signup.Signup(db)
 db.connect_database()
 
 usernames = db.getColumnData("user_username", "user")
-passwords = db.getColumnData("user_password", "user")
+userpasswords = db.getColumnData("user_password", "user")
 userids = db.getColumnData("user_id", "user")
 
 #admin data
