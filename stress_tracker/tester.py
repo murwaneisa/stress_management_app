@@ -2,6 +2,13 @@ import datetime
 import global_vars
 import connector 
 
+import encryption
+
+
+pass0 = "test"
+
+pass2 = encryption.decode(pass0)
+print(pass2)
 user_id = 2
 
 db = connector.Database("test_config.ini")

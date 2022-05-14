@@ -4,6 +4,8 @@ import streamlit as st
 import streamlit_authenticator as stauth
 import weekly_log, mood_log, signup, connector, history, avg_weekplan, studentstats
 import tips
+import encryption
+
 import global_vars
 
 @st.cache(allow_output_mutation=True)
@@ -49,17 +51,13 @@ passwords = userpasswords + adminpasswords
 login_names = usernames + adminnames
 login_ids = userids + adminids
 
-
-
-print(login_names)
-print(passwords)
-# encrypt passwords
-hashed_passwords = stauth.Hasher(passwords).generate()
+# decrypt passwords
+decoded_pass = [encryption.decode(password) for password in passwords]
 
 authenticator = stauth.Authenticate(
     login_ids,
     login_names,
-    hashed_passwords,
+    decoded_pass,
     'some_cookie_name',
     'some_signature_key',
     cookie_expiry_days=30)

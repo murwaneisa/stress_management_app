@@ -8,10 +8,12 @@ def encode(password):
     # print(base64_message)
     return base64_message
 
-
 def decode(encrypted_password):
-    base64_bytes = encrypted_password.encode("ascii")
-    pass_bytes = base64.b64decode(base64_bytes)
-    password = pass_bytes.decode("ascii")
-    # print(password)
+    try:
+        base64_bytes = encrypted_password.encode("ascii")
+        pass_bytes = base64.b64decode(base64_bytes)
+        password = pass_bytes.decode("ascii")
+    except:
+        password = encrypted_password
+
     return password
