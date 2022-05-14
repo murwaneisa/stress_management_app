@@ -22,7 +22,7 @@ class Database:
         except Exception as er:
             print(er)
 
-    def getUserData(self, user_id, table):
+    def getUserData(self, table,user_id=None):
         mc = self.connector.cursor()
 
         if table == "user":
@@ -45,7 +45,11 @@ class Database:
             columns.append(colname)
             data[colname] = []
 
-        mc.execute("SELECT * FROM "+str(table)+" WHERE "+user_column+ "="+str(user_id))
+        if user_id == None:
+            mc.execute("SELECT * FROM "+str(table))
+        else:
+            mc.execute("SELECT * FROM "+str(table)+" WHERE "+user_column+ "="+str(user_id))
+            print(000)
         result = mc.fetchall()
 
         for record in result:
@@ -54,10 +58,14 @@ class Database:
 
         return data
 
-    def getColumnData(self, column, table):
+    def getColumnData(self, column, table,criteria=None):
         mc = self.connector.cursor()
 
-        mc.execute("SELECT "+column+" FROM "+table)
+        if criteria == None:
+            mc.execute("SELECT "+column+" FROM "+table)
+        else:
+            mc.execute("SELECT "+column+" FROM "+table+ " WHERE "+criteria)
+
         result = mc.fetchall()
 
         data = []
@@ -74,7 +82,6 @@ class Database:
             user_column = "user_id"
         elif table == "stats":
             user_column = "stats_userid"
-
         elif table == "admin":
             user_column = "admin_id"
 

@@ -3,6 +3,7 @@ import datetime as dt
 import streamlit as st
 import streamlit_authenticator as stauth
 import weekly_log, mood_log, signup, connector, history, avg_weekplan, studentstats
+import tips
 import global_vars
 
 @st.cache(allow_output_mutation=True)
@@ -76,49 +77,56 @@ if authentication_status:
         user_type = "admin"
 
     print(user_type)
-    user_info = db.getUserData(user_id,user_type)
+    user_info = db.getUserData(user_type,user_id)
 
-    #student user
+    # student user
     if user_type == "user":
-        #init classes
+        # init classes
         weeklog = weekly_log.WeeklyLog()
         moodlog = mood_log.MoodLog()
+        tips = tips.Tips(db)
         history = history.History()
 
-        user_stats = db.getUserData(user_id,"stats")
+        user_stats = db.getUserData("stats",user_id)
 
-        #get current year and last weeknr
-        current_date = dt.date.today() 
-        weeknr = current_date.isocalendar()[1] -1
-        year = current_date.isocalendar()[0]
+        # check if user has stats
+        if len(user_stats["stats_id"])>0:
+            # get current year and last weeknr
+            current_date = dt.date.today() 
+            weeknr = current_date.isocalendar()[1] -1
+            year = current_date.isocalendar()[0]
 
-        if weeknr == 0:
-            year -= 1
-            date = dt.date(year, 12, 31)
-            weeknr = date.isocalendar()[1]
-        # check if user_stats is empty
-        if user_stats['stats_year']:
-            st.write(user_stats)
+            if weeknr == 0:
+                year -= 1
+                date = dt.date(year, 12, 31)
+                weeknr = date.isocalendar()[1]
+
             lastrec_year = user_stats['stats_year'][-1]
             lastrec_weeknr = user_stats['stats_weeknr'][-1]
 
-        else:
-            lastrec_year = None
-            lastrec_weeknr = None
-
-        if (year == lastrec_year) and (weeknr == lastrec_weeknr):
-            give_feedback = False
-            pages = ["Welcome",
-                     "History",
-                    "Edit profile"]
+            if (year == lastrec_year) and (weeknr == lastrec_weeknr):
+                give_feedback = False
+            else:
+                give_feedback = True     
         else:
             give_feedback = True
+
+
+        if give_feedback:
             pages = ["Welcome",
-                    "Weekly activity",
-                    "Weekly mood",
-                    "History",
-                    "Edit profile"]
-    #admin user
+                     "Weekly activity",
+                     "Weekly mood",
+                     "History",
+                     "Tips",
+                     "Edit profile"]
+        else:
+            pages = ["Welcome",
+                     "History",
+                     "Tips",
+                     "Edit profile"]
+
+
+    # admin user
     elif user_type == "admin":
         avgWeekplan = avg_weekplan.AvgWeekplan(db,user_id)
         studentStats = studentstats.StudentStatistics(db)
@@ -137,6 +145,7 @@ if authentication_status:
         webpage = st.radio('Navigation', pages)
         authenticator.logout('Logout', 'main')
 
+    # student/admin pages
     if webpage == "Welcome":
         if user_type == "user":
             st.header('Hello *%s*! Welcome back' % (user_info["user_firstname"][0]))
@@ -154,51 +163,33 @@ if authentication_status:
             course_options = ["All"]+list(global_vars.course_options)
             degree_options = ["All"]+list(global_vars.degree_options)
 
-            program = st.selectbox("Program", course_options,index=course_options.index(active_program))
-            degree = st.selectbox("Degree", degree_options,index=degree_options.index(active_degree))
+            program = st.selectbox("Program", course_options, index=course_options.index(active_program))
+            degree = st.selectbox("Degree", degree_options, index=degree_options.index(active_degree))
             
             if st.button("Confirm"):
-                get_data().append([program,degree])
+                get_data().append([program, degree])
                 print(get_data())
 
             st.write("Use the sidepanel options to evaluate student performance of this track.")   
 
-
-    elif webpage == "Weekly activity":
-        weeklog.weeklog()
-
-    elif webpage == "Weekly mood":
-        moodlog.moodlog()
-        moodlog.add_comments()
-        if st.button('Submit', key='mood_ok'):
-            st.write("Weekly mood updated")
-
-    elif webpage == "Avg. weekplan":
-
-        print(active_program,active_degree)
-        avgWeekplan.weekplan(active_program,active_degree)
-    
-    elif webpage == "Student statistics":
-        studentStats.showStats(active_program,active_degree)
-
     elif webpage == "Edit profile":
         # retrieve user data
-        user_info = db.getUserData(user_id, user_type)
+        user_info = db.getUserData(user_type,user_id)
 
         st.write("Modify your profile details")
 
         # text of variables and input options
         if user_type == "user":
-            stat_description = {"user_username":["Username","str"],
-                                "user_password":["Password","str"],
-                                "user_firstname":["First name","str"],
-                                "user_lastname":["Last name","str"],
-                                "user_gender":["Gender",global_vars.gender_options],
+            stat_description = {"user_username":["Username", "str"],
+                                "user_password":["Password", "str"],
+                                "user_firstname":["First name", "str"],
+                                "user_lastname":["Last name", "str"],
+                                "user_gender":["Gender", global_vars.gender_options],
                                 "user_email":["E-mail","str"],
-                                "user_program":["Course program",global_vars.course_options],
-                                "user_degree":["Degree type",global_vars.degree_options],
-                                "user_dob":["Date of Birth","date"],
-                                "user_studystart":["First year of study","int"]}
+                                "user_program":["Course program", global_vars.course_options],
+                                "user_degree":["Degree type", global_vars.degree_options],
+                                "user_dob":["Date of Birth", "date"],
+                                "user_studystart":["First year of study", "int"]}
 
         elif user_type == "admin":
             stat_description = {"admin_username":["Username","str"],
@@ -246,8 +237,36 @@ if authentication_status:
 
             st.write("Profile details updated")
 
+    # student pages
+    elif webpage == "Weekly activity":
+        weeklog.weeklog()
+
+    elif webpage == "Weekly mood":
+        moodlog.moodlog()
+        moodlog.add_comments()
+        if st.button('Submit', key='mood_ok'):
+            st.write("Weekly mood updated")
+
     elif webpage == "History":
-        history.page()
+        user_stats = db.getUserData("stats",user_id)
+        history.page(user_stats)
+    
+    elif webpage == "Tips":
+        user_stats = db.getUserData("stats",user_id)
+        user_info = db.getUserData("user",user_id)
+        tips.showTips(user_info, user_stats)
+
+
+    # admin pages
+    elif webpage == "Avg. weekplan":
+
+        print(active_program, active_degree)
+        avgWeekplan.weekplan(active_program, active_degree)
+    
+    elif webpage == "Student statistics":
+        studentStats.showStats(active_program, active_degree)
+
+
 
 elif authentication_status is False:
     st.error('Username/password is incorrect')
