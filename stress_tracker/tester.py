@@ -4,41 +4,42 @@ import connector
 
 import encryption
 
-
-pass0 = "test"
-
-pass2 = encryption.decode(pass0)
-print(pass2)
-user_id = 2
-
 db = connector.Database("test_config.ini")
 db.connect_database()
 
-activities = ["sleep", "study", "work", "social","hobby"]
 
+
+mc = db.connector.cursor()
+
+mc.execute("SELECT stats_sleep,stats_work FROM user,stats WHERE (user.user_id = stats.stats_userid) AND user.user_program = 'tt'")
+result = mc.fetchall()
+
+print(result)
+
+data = []
+
+for record in result:
+    data.append(record[0])
+print(data)
+
+'''
 program = "Computer Science"
 degree = "Bachelor"
+
+
+criterium = "(user_degree='"+degree+"' AND user_program='"+program+"')"
+userids = db.getColumnData("user_id", "user",criterium)
+print(userids)
+
+activities = ["sleep", "study", "work", "social","hobby"]
+
 
 for a in activities:
     criterium = "(stats_degree='"+degree+"' AND stats_program='"+program+"' AND stats_bound = 0)"
     print(criterium)
     get_low = db.getColumnData("stats_"+a, "avg_stats",criterium)
     print(get_low)
-
-def avg(values):
-    total = sum(values)
-    count = len(values)
-
-    if total == 0:
-        avg = 0
-    else:
-        avg = total/count
-        
-    return avg
-
-avg_stats = db.getUserData("user",user_id)
-print(avg_stats["user_program"][0])
-
+'''
 
 
 

@@ -58,10 +58,22 @@ class Database:
 
         return data
 
-    def getColumnData(self, column, table,criteria=None):
+    def customQuery(self, sql_query):
         mc = self.connector.cursor()
 
-        if criteria == None:
+        try:
+            mc.execute(sql_query)
+            result = mc.fetchall()
+        except Exception as er:
+            result = []
+            print(er)
+
+        return result
+
+    def getColumnData(self, column, table, criteria=None):
+        mc = self.connector.cursor()
+
+        if criteria is None:
             mc.execute("SELECT "+column+" FROM "+table)
         else:
             mc.execute("SELECT "+column+" FROM "+table+ " WHERE "+criteria)

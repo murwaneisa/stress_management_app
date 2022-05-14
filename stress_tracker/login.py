@@ -54,10 +54,14 @@ login_ids = userids + adminids
 # decrypt passwords
 decoded_pass = [encryption.decode(password) for password in passwords]
 
+# encrypt passwords (temp fix)
+hashed_passwords = stauth.Hasher(decoded_pass).generate()
+
+
 authenticator = stauth.Authenticate(
     login_ids,
     login_names,
-    decoded_pass,
+    hashed_passwords,
     'some_cookie_name',
     'some_signature_key',
     cookie_expiry_days=30)
