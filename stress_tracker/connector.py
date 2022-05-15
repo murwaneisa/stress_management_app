@@ -22,12 +22,12 @@ class Database:
         except Exception as er:
             print(er)
 
-    def getUserData(self, table,user_id=None):
+    def getUserData(self, table, user_id=None):
         mc = self.connector.cursor()
 
         if table == "user":
             user_column = "user_id"
-        elif table in ["stats","avg_stats"]:
+        elif table in ["stats", "avg_stats"]:
             user_column = "stats_userid"
         elif table == "admin":
             user_column = "admin_id"
@@ -45,10 +45,10 @@ class Database:
             columns.append(colname)
             data[colname] = []
 
-        if user_id == None:
+        if user_id is None:
             mc.execute("SELECT * FROM "+str(table))
         else:
-            mc.execute("SELECT * FROM "+str(table)+" WHERE "+user_column+ "="+str(user_id))
+            mc.execute("SELECT * FROM "+str(table)+" WHERE "+user_column+"="+str(user_id))
             print(000)
         result = mc.fetchall()
 
@@ -76,7 +76,7 @@ class Database:
         if criteria is None:
             mc.execute("SELECT "+column+" FROM "+table)
         else:
-            mc.execute("SELECT "+column+" FROM "+table+ " WHERE "+criteria)
+            mc.execute("SELECT "+column+" FROM "+table+" WHERE "+criteria)
 
         result = mc.fetchall()
 
@@ -96,7 +96,6 @@ class Database:
             user_column = "stats_userid"
         elif table == "admin":
             user_column = "admin_id"
-
 
         sql = "UPDATE "+table+" SET "
         for v in values.keys():
@@ -127,7 +126,7 @@ class Database:
                 print(values[v][1])
                 text_values += str(values[v][0]) + ","
             else:
-                text_values +=  "'"+str(values[v][0])+"',"
+                text_values += "'"+str(values[v][0])+"',"
 
         text_names = text_names[0:-1]+")"
         text_values = text_values[0:-1]+")"

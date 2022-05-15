@@ -7,8 +7,8 @@ class WeeklyLog:
 
     def __init__(self):
         self.period_checkboxes = {}
-        self.hour_checkboxes = {}
-        self.date = None
+        # self.hour_checkboxes = {}
+        # self.date = None
 
     def on_confirm(self):
         pass

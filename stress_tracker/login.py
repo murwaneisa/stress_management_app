@@ -5,12 +5,8 @@ import streamlit_authenticator as stauth
 import weekly_log, mood_log, signup, connector, history, avg_weekplan, studentstats
 import tips
 import encryption
-
 import global_vars
 
-@st.cache(allow_output_mutation=True)
-def get_data():
-    return []
 
 # page config
 st.set_page_config(
@@ -24,6 +20,12 @@ st.set_page_config(
          'About': ""
      }
  )
+
+
+@st.cache(allow_output_mutation=True)
+def get_data():
+    return []
+
 
 # session state
 if 'hour_counter' not in st.session_state:
@@ -42,10 +44,10 @@ usernames = db.getColumnData("user_username", "user")
 userpasswords = db.getColumnData("user_password", "user")
 userids = db.getColumnData("user_id", "user")
 
-#admin data
-adminnames = db.getColumnData("admin_username","admin")
-adminpasswords = db.getColumnData("admin_password","admin")
-adminids = db.getColumnData("admin_id","admin")
+# admin data
+adminnames = db.getColumnData("admin_username", "admin")
+adminpasswords = db.getColumnData("admin_password", "admin")
+adminids = db.getColumnData("admin_id", "admin")
 
 passwords = userpasswords + adminpasswords
 login_names = usernames + adminnames
@@ -79,7 +81,7 @@ if authentication_status:
         user_type = "admin"
 
     print(user_type)
-    user_info = db.getUserData(user_type,user_id)
+    user_info = db.getUserData(user_type, user_id)
 
     # student user
     if user_type == "user":
@@ -89,13 +91,13 @@ if authentication_status:
         tips = tips.Tips(db)
         history = history.History()
 
-        user_stats = db.getUserData("stats",user_id)
+        user_stats = db.getUserData("stats", user_id)
 
         # check if user has stats
-        if len(user_stats["stats_id"])>0:
+        if len(user_stats["stats_id"]) > 0:
             # get current year and last weeknr
-            current_date = dt.date.today() 
-            weeknr = current_date.isocalendar()[1] -1
+            current_date = dt.date.today()
+            weeknr = current_date.isocalendar()[1] - 1
             year = current_date.isocalendar()[0]
 
             if weeknr == 0:
@@ -109,11 +111,11 @@ if authentication_status:
             if (year == lastrec_year) and (weeknr == lastrec_weeknr):
                 give_feedback = False
             else:
-                give_feedback = True     
+                give_feedback = True
         else:
             give_feedback = True
 
-
+        # check if user has given feedback this week
         if give_feedback:
             pages = ["Welcome",
                      "Weekly activity",
@@ -127,16 +129,15 @@ if authentication_status:
                      "Tips",
                      "Edit profile"]
 
-
     # admin user
     elif user_type == "admin":
-        avgWeekplan = avg_weekplan.AvgWeekplan(db,user_id)
+        avgWeekplan = avg_weekplan.AvgWeekplan(db, user_id)
         studentStats = studentstats.StudentStatistics(db)
 
-        if len(get_data())>0:
-            active_program,active_degree = get_data()[-1]
+        if len(get_data()) > 0:
+            active_program, active_degree = get_data()[-1]
         else:
-            active_program,active_degree = "All","All"
+            active_program, active_degree = "All", "All"
 
         pages = ["Welcome",
                  "Avg. weekplan",
@@ -167,38 +168,38 @@ if authentication_status:
 
             program = st.selectbox("Program", course_options, index=course_options.index(active_program))
             degree = st.selectbox("Degree", degree_options, index=degree_options.index(active_degree))
-            
+
             if st.button("Confirm"):
                 get_data().append([program, degree])
                 print(get_data())
 
-            st.write("Use the sidepanel options to evaluate student performance of this track.")   
+            st.write("Use the sidepanel options to evaluate student performance of this track.")
 
     elif webpage == "Edit profile":
         # retrieve user data
-        user_info = db.getUserData(user_type,user_id)
+        user_info = db.getUserData(user_type, user_id)
 
         st.write("Modify your profile details")
 
         # text of variables and input options
         if user_type == "user":
-            stat_description = {"user_username":["Username", "str"],
-                                "user_password":["Password", "str"],
-                                "user_firstname":["First name", "str"],
-                                "user_lastname":["Last name", "str"],
-                                "user_gender":["Gender", global_vars.gender_options],
-                                "user_email":["E-mail","str"],
-                                "user_program":["Course program", global_vars.course_options],
-                                "user_degree":["Degree type", global_vars.degree_options],
-                                "user_dob":["Date of Birth", "date"],
-                                "user_studystart":["First year of study", "int"]}
+            stat_description = {"user_username": ["Username", "str"],
+                                "user_password": ["Password", "str"],
+                                "user_firstname": ["First name", "str"],
+                                "user_lastname": ["Last name", "str"],
+                                "user_gender": ["Gender", global_vars.gender_options],
+                                "user_email": ["E-mail", "str"],
+                                "user_program": ["Course program", global_vars.course_options],
+                                "user_degree": ["Degree type", global_vars.degree_options],
+                                "user_dob": ["Date of Birth", "date"],
+                                "user_studystart": ["First year of study", "int"]}
 
         elif user_type == "admin":
-            stat_description = {"admin_username":["Username","str"],
-                                "admin_password":["Password","str"],
-                                "admin_firstname":["First name","str"],
-                                "admin_lastname":["Last name","str"],
-                                "admin_email":["E-mail","str"]}            
+            stat_description = {"admin_username": ["Username", "str"],
+                                "admin_password": ["Password", "str"],
+                                "admin_firstname": ["First name", "str"],
+                                "admin_lastname": ["Last name", "str"],
+                                "admin_email": ["E-mail", "str"]}
 
         # generate input boxes
         input = {}
@@ -250,25 +251,22 @@ if authentication_status:
             st.write("Weekly mood updated")
 
     elif webpage == "History":
-        user_stats = db.getUserData("stats",user_id)
+        user_stats = db.getUserData("stats", user_id)
         history.page(user_stats)
-    
-    elif webpage == "Tips":
-        user_stats = db.getUserData("stats",user_id)
-        user_info = db.getUserData("user",user_id)
-        tips.showTips(user_info, user_stats)
 
+    elif webpage == "Tips":
+        user_stats = db.getUserData("stats", user_id)
+        user_info = db.getUserData("user", user_id)
+        tips.showTips(user_info, user_stats)
 
     # admin pages
     elif webpage == "Avg. weekplan":
 
         print(active_program, active_degree)
         avgWeekplan.weekplan(active_program, active_degree)
-    
+
     elif webpage == "Student statistics":
         studentStats.showStats(active_program, active_degree)
-
-
 
 elif authentication_status is False:
     st.error('Username/password is incorrect')

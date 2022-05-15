@@ -1,9 +1,9 @@
-#global variables
+# global variables
 gender_options = {"F": "Female",
                   "M": "Male",
                   "X": "Other",
                   "0": "Prefer not to say"}
-                  
+
 course_options =   ('Agriculture',
                     'Anthropology',
                     'Archaeology',
@@ -36,6 +36,7 @@ course_options =   ('Agriculture',
                     'Social work',
                     'Sociology',
                     'Visual arts')
+
 degree_options = ("Bachelor",
                   "Master",
                   "Doctorate")
