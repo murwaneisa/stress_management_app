@@ -87,7 +87,7 @@ class Database:
 
         return data
 
-    def UpdateUserData(self, user_id, values, table):
+    def UpdateUserData(self, user_id, values, table, criteria=None):
         mc = self.connector.cursor()
 
         if table == "user":
@@ -107,12 +107,16 @@ class Database:
 
             sql += text + ","
 
-        sql = sql[0:-1] + " WHERE "+user_column+"="+str(user_id)
+        if criteria is None:
+            sql = sql[0:-1] + " WHERE "+user_column+"="+str(user_id)
+        else:
+            sql = sql[0:-1] + " WHERE "+criteria
+
         print(sql)
         mc.execute(sql)
         self.connector.commit()
 
-    def InsertData(self, values, table):
+    def insertData(self, values, table):
         mc = self.connector.cursor()
 
         text_names = " ("
@@ -121,9 +125,9 @@ class Database:
             text_names += str(v)+","
             if values[v][1] == "int":
                 print(values[v][1])
-                text_values += v + " =" + str(values[v][0]) + ","
+                text_values += str(values[v][0]) + ","
             else:
-                text_values = v + " ='"+str(values[v][0])+"'" + ","
+                text_values +=  "'"+str(values[v][0])+"',"
 
         text_names = text_names[0:-1]+")"
         text_values = text_values[0:-1]+")"
