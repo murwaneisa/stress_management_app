@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 class MoodLog:
     def __init__(self):
         self.mood_slider = None
@@ -19,11 +20,11 @@ class MoodLog:
             }
 
         st.title("How did you feel this week?")
-        self.mood_slider = st.select_slider("", options=range(1, 11),
+        self.mood_slider = st.select_slider("", options=range(1, 11), value=6,
             format_func=lambda x: mood_options.get(x))
 
         other_options = {
-            "migraine": "Migraines",
+            "migraine": "Migraines or headaches",
             "digestive": "Digestive issues",
             "insomnia": "Insomnia",
             "energy": "Low energy, fatigue",

@@ -1,8 +1,9 @@
 # signup widget
 from datetime import datetime
 import streamlit as st
+import streamlit_authenticator as stauth
 import global_vars
-import encryption
+# import encryption
 
 # import streamlit_authenticator as stauth
 # import styles
@@ -10,6 +11,7 @@ import encryption
 
 class Signup:
     def __init__(self, connector):
+        self.username = None
         self.first_name = None
         self.last_name = None
         self.gender = None
@@ -30,7 +32,7 @@ class Signup:
         )
         self.gender = st.selectbox(
             "Gender",
-            global_vars.gender_options,
+            options=global_vars.gender_options, index=3,
             format_func=lambda x: global_vars.gender_options.get(x),
             key="gender",
         )
@@ -43,13 +45,6 @@ class Signup:
         self.degree = st.selectbox(
             "Level of Study", global_vars.degree_options, key="degree"
         )
-        self.password = st.text_input(
-            "Password",
-            max_chars=70,
-            key="psw",
-            type="password",
-            autocomplete="new-password",
-        )
         self.bday = st.date_input(
             "Birthday",
             value=datetime(1995, 1, 1),
@@ -59,17 +54,27 @@ class Signup:
         self.study_year = st.number_input(
             "Year of studies",
             min_value=1,
-            max_value=None,
+            max_value=10,
             value=1,
-            step=None,
-            format=None,
             key="study-year",
+        )
+        self.username = st.text_input(
+            "Username",
+            max_chars=70,
+            key="username",
+            autocomplete="username",
+        )
+        self.password = st.text_input(
+            "Password",
+            max_chars=70,
+            key="psw",
+            type="password",
+            autocomplete="new-password",
         )
 
     def on_confirm(self):
-        confirm = st.button("Confirm and sign up")
-        if confirm:
-            password = encryption.encode(self.password)
+        if st.button("Confirm and sign up"):
+            password = stauth.Hasher(self.password).generate()
             self.connector.insert_user(
                 self.first_name,
                 self.last_name,
@@ -81,4 +86,4 @@ class Signup:
                 self.bday,
                 self.study_year,
             )
-        return self.email, self.password
+        return self.username, self.password

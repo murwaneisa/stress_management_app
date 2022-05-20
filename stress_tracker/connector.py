@@ -3,7 +3,7 @@ import mysql.connector
 
 
 class Database:
-    def __init__(self, config_file="config.ini"):
+    def __init__(self, config_file="test_config.ini"):
         self.connector = None
         self.config = configparser.ConfigParser()
         self.config.read(config_file)

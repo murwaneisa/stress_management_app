@@ -28,7 +28,7 @@ class AvgWeekplan:
                 criteria = c1 + c2 + c3 + c4
                 self.db.UpdateUserData(None, values, "avg_stats", criteria)
 
-    # weekly log widget
+    # set avarage weekplan widget
     def weekplan(self, program, degree):
         period = {"avg. per day": [0, 20], "hours per week": [0, 60]}
         activities = {'sleep': "avg. per day",

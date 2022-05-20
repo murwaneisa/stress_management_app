@@ -4,8 +4,9 @@ import streamlit as st
 import streamlit_authenticator as stauth
 import weekly_log, mood_log, signup, connector, history, avg_weekplan, studentstats
 import tips
-import encryption
 import global_vars
+import stress_ai
+import encryption
 
 
 # page config
@@ -25,12 +26,6 @@ st.set_page_config(
 @st.cache(allow_output_mutation=True)
 def get_data():
     return []
-
-
-# session state
-if 'hour_counter' not in st.session_state:
-    st.session_state['hour_counter'] = 0
-# st.session_state['date_counter'] = []
 
 
 # init objects
@@ -53,13 +48,11 @@ passwords = userpasswords + adminpasswords
 login_names = usernames + adminnames
 login_ids = userids + adminids
 
-# decrypt passwords
-decoded_pass = [encryption.decode(password) for password in passwords]
 
-# encrypt passwords (temp fix)
-hashed_passwords = stauth.Hasher(decoded_pass).generate()
+# encrypt passwords
+hashed_passwords = stauth.Hasher(passwords).generate()
 
-
+# authenticator
 authenticator = stauth.Authenticate(
     login_ids,
     login_names,
@@ -86,12 +79,13 @@ if authentication_status:
     # student user
     if user_type == "user":
         # init classes
-        weeklog = weekly_log.WeeklyLog()
+        weeklog = weekly_log.WeeklyLog(db, user_id)
         moodlog = mood_log.MoodLog()
         tips = tips.Tips(db)
         history = history.History()
 
         user_stats = db.getUserData("stats", user_id)
+        user_info = db.getUserData("user", user_id)
 
         # check if user has stats
         if len(user_stats["stats_id"]) > 0:
@@ -122,6 +116,7 @@ if authentication_status:
                      "Weekly mood",
                      "History",
                      "Tips",
+                     "Stress AI",
                      "Edit profile"]
         else:
             pages = ["Welcome",
@@ -157,7 +152,7 @@ if authentication_status:
                 st.write(
                     "Use the sidepanel options to fill in your weekplan or get insight into your performance.")
             else:
-                st.write("You already gave last weeks feedback.")
+                st.write("You already gave feedback of last week.")
                 st.write("Use the side panel options to get insight into your performance.")
         elif user_type == "admin":
             st.header('Hello *%s*.' % (user_info["admin_firstname"][0]))
@@ -177,7 +172,6 @@ if authentication_status:
 
     elif webpage == "Edit profile":
         # retrieve user data
-        user_info = db.getUserData(user_type, user_id)
 
         st.write("Modify your profile details")
 
@@ -240,7 +234,7 @@ if authentication_status:
 
             st.write("Profile details updated")
 
-    # student pages
+    # user pages
     elif webpage == "Weekly activity":
         weeklog.weeklog()
 
@@ -255,9 +249,15 @@ if authentication_status:
         history.page(user_stats)
 
     elif webpage == "Tips":
-        user_stats = db.getUserData("stats", user_id)
         user_info = db.getUserData("user", user_id)
+        user_stats = db.getUserData("stats", user_id)
+        
         tips.showTips(user_info, user_stats)
+
+    elif webpage == "Stress AI":
+        user_stats = db.getUserData("stats", user_id)
+        stress_ai = stress_ai.Stress_ai(user_info, user_stats)
+        stress_ai.ai_widget()
 
     # admin pages
     elif webpage == "Avg. weekplan":

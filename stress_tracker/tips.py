@@ -21,7 +21,7 @@ class Tips:
 
         else:
             # retrieve existing data
-            activities = ["sleep", "study", "work", "social","hobby"]
+            activities = ["sleep", "study", "work", "social", "hobby"]
 
             for p in ["avg", "last_week"]:
 
@@ -48,11 +48,11 @@ class Tips:
                         avg = sum(v)/len(v)
 
                         if avg > boundary[1]:
-                            st.write("- It looks like your average "+a+ " hours are quite high. Maybe you can lower it a bit.")
+                            st.write("- It looks like your average "+a+" hours are quite high. Maybe you can lower it a bit.")
                         elif avg < boundary[0]:
-                            st.write("- It looks like your average "+a+ " hours are low. Maybe you can increase it a bit.")
+                            st.write("- It looks like your average "+a+" hours are low. Maybe you can increase it a bit.")
                         else:
-                            st.write("- Your "+a+" habit looks great. Nice job!")
+                            st.write("- Your "+a+" habits look great. Nice job!")
 
                     elif p == "last_week":
                         avg = v[-1]
@@ -62,4 +62,5 @@ class Tips:
                         elif avg < boundary[0]:
                             st.write("- Your "+a+" hours were low last week. Maybe you can increase it a bit.")
                         else:
-                            st.write("- Last weeks "+a+" hours were good. Keep it up!")           
+                            st.write("- Last weeks "+a+" hours were good. Keep it up!")
+

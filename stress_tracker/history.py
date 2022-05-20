@@ -45,7 +45,9 @@ class History:
                 delta_v = round(avg_v - self.avg(values[0:-1]), 1)
 
             st.metric(label, avg_v, delta_v, "inverse")
-            weeks = {"week_1": [1, 3, 5, 1, 2, 7, 2, 10], "week_2": [3, 3, 0, 7, 2, 8, 4, 5], "week_3": [5, 8, 3, 2, 0, 7, 6, 10]}
+            weeks = {"week_1": [1, 3, 5, 1, 2, 7, 2, 10],
+                     "week_2": [3, 3, 0, 7, 2, 8, 4, 5],
+                     "week_3": [5, 8, 3, 2, 0, 7, 6, 10]}
 
             chart_data = pd.DataFrame(data=weeks)
             st.line_chart(data=chart_data, height=150)

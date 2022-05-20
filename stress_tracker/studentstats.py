@@ -4,7 +4,7 @@ import altair as alt
 
 class StudentStatistics:
 
-    def __init__(self,db):
+    def __init__(self, db):
         self.db = db
         self.program = None
         self.degree = None
@@ -19,8 +19,7 @@ class StudentStatistics:
         st.metric(label="Program", value=program)
         st.metric(label="Degree", value=degree)
 
-
-        #retrieve course information
+        # retrieve course information
         q1 = "SELECT stats_year, stats_weeknr,user_id,stats_stress "
         q2 = "FROM user,stats "
         q3 = "WHERE (user.user_id = stats.stats_userid)"
@@ -42,7 +41,6 @@ class StudentStatistics:
 
         students = set(values["user_id"])
 
-
         if len(students) == 0:
             st.write("Course program has no data yet.")
         else:
@@ -55,7 +53,7 @@ class StudentStatistics:
             c3.metric("Average stress level", avg_stress)
 
             # make stress chart
-            week_dic = {w:[] for w in weeks}
+            week_dic = {w: [] for w in weeks}
 
             for i, v in enumerate(values["period"]):
                 stress = values["stress"][i]
@@ -64,7 +62,7 @@ class StudentStatistics:
             values = []
             for w in week_dic:
                 week_stress = sum(week_dic[w])/len(week_dic[w])
-                values.append({'period': w, 'stress': week_stress,'avg_stress': avg_stress})
+                values.append({'period': w, 'stress': week_stress, 'avg_stress': avg_stress})
 
             data = alt.Data(values=values)
             chart_bar = alt.Chart(data).mark_bar().encode(
@@ -89,7 +87,7 @@ class StudentStatistics:
                             criterium = "(stats_degree='Default' AND stats_program='Default' AND stats_bound ="+str(b)+")"
                             values = self.db.getColumnData("stats_"+a, "avg_stats", criterium)
 
-                        boundary[b] = sum(values)/len(values)    
+                        boundary[b] = sum(values)/len(values)
 
                     # make query
                     q1 = "SELECT stats_year,stats_weeknr,user_firstname,user_lastname,stats_stress,stats_"+a+" "
@@ -114,7 +112,7 @@ class StudentStatistics:
                         b = "normal"
                         if r[4] < boundary[0]:
                             b = "below"
-                            low_result+=1
+                            low_result += 1
                         elif r[4] > boundary[1]:
                             b = "above"
                             high_result += 1
