@@ -3,3 +3,4 @@ streamlit
 mysql-connector-python
 streamlit-authenticator
 joblib
+scikit-learn
