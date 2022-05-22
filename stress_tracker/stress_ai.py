@@ -39,7 +39,7 @@ class Stress_ai:
             4: "Frequently",
             5: "All the time"
         }
-        lst = ["user_gender", "stats_sleep", "stats_study", "stats_social", "stats_sport", "stats_work", "stats_hobby", "stats_stress", "stats_headache", "stats_digest", "stats_energy", "stats_relation", "stats_financial"]
+        lst = ["user_gender", "stats_sleep", "stats_study", "stats_social", "stats_sport", "stats_work", "stats_hobby", "stats_stress", "stats_migraine", "stats_digest", "stats_energy", "stats_relation", "stats_financial"]
 
         ai_data = [age, ]
 
