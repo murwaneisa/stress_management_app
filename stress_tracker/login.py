@@ -121,6 +121,7 @@ if authentication_status:
             pages = ["Welcome",
                      "History",
                      "Tips",
+                     "Stress AI",
                      "Edit profile"]
 
     # admin user
