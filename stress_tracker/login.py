@@ -78,12 +78,6 @@ if authentication_status:
 
     # student user
     if user_type == "user":
-        # init classes
-        weeklog = weekly_log.WeeklyLog(db, user_id)
-        moodlog = mood_log.MoodLog()
-        tips = tips.Tips(db)
-        history = history.History()
-
         user_stats = db.getUserData("stats", user_id)
         user_info = db.getUserData("user", user_id)
 
@@ -109,11 +103,17 @@ if authentication_status:
         else:
             give_feedback = True
 
+
+        # init classes
+        weeklog = weekly_log.WeeklyLog(db, user_id,year,weeknr)
+        moodlog = mood_log.MoodLog()
+        tips = tips.Tips(db)
+        history = history.History()
+
         # check if user has given feedback this week
         if give_feedback:
             pages = ["Welcome",
-                     "Weekly activity",
-                     "Weekly mood",
+                     "Weekly activity & mood",
                      "History",
                      "Tips",
                      "Stress AI",
@@ -235,7 +235,7 @@ if authentication_status:
             st.write("Profile details updated")
 
     # user pages
-    elif webpage == "Weekly activity":
+    elif webpage == "Weekly activity & mood":
         weeklog.weeklog()
 
     elif webpage == "Weekly mood":

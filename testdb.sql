@@ -44,23 +44,25 @@ stats_social int(4),
 stats_sport int(4),
 stats_hobby int(4),
 stats_stress int(4),
-stats_headache int(4),
+stats_migraine int(4),
 stats_digest int(4),
+stats_insomnia int(4),
 stats_energy int(4),
 stats_relation int(4),
 stats_financial int(4),
+stats_comments varchar(200),
 PRIMARY KEY (stats_id),
 FOREIGN KEY (stats_userid) REFERENCES user(user_id))ENGINE=INNODB;
 
-INSERT INTO `stats` (stats_id,stats_userid,stats_year,stats_weeknr,stats_sleep,stats_study,stats_work,stats_social,stats_sport,stats_hobby,stats_stress,stats_headache,stats_digest,stats_energy,stats_relation)
-VALUES (1,2,2022,15,8,30,8,4,2,4,4,0,0,0,0,0),
-(2,2,2022,16,10,40,8,2,2,4,3,0,0,0,0,0),
-(3,2,2022,17,8,25,8,5,3,4,4,0,0,1,0,0),
-(4,3,2022,18,9,35,8,2,1,3,5,0,0,1,0,0),
-(5,3,2022,15,6,45,0,8,3,3,2,0,0,0,0,0),
-(6,3,2022,16,6,30,0,8,3,4,2,2,0,0,0,0),
-(7,3,2022,17,4,20,0,6,3,6,3,1,0,0,0,0),
-(8,3,2022,18,8,25,0,10,3,8,5,0,0,3,0,0);
+INSERT INTO `stats` (stats_id,stats_userid,stats_year,stats_weeknr,stats_sleep,stats_study,stats_work,stats_social,stats_sport,stats_hobby,stats_stress,stats_migraine,stats_digest,stats_insomnia,stats_energy,stats_relation,stats_financial,stats_comments)
+VALUES (1,2,2022,15,8,30,8,4,2,4,4,0,0,0,0,0,0,""),
+(2,2,2022,16,10,40,8,2,2,4,3,0,0,0,0,0,0,""),
+(3,2,2022,17,8,25,8,5,3,4,4,0,0,1,0,0,0,""),
+(4,3,2022,18,9,35,8,2,1,3,5,0,0,1,0,0,0,""),
+(5,3,2022,15,6,45,0,8,3,3,2,0,0,0,0,0,0,""),
+(6,3,2022,16,6,30,0,8,3,4,2,2,0,0,0,0,0,""),
+(7,3,2022,17,4,20,0,6,3,6,3,1,0,0,0,0,0,""),
+(8,3,2022,18,8,25,0,10,3,8,5,0,0,3,0,0,0,"");
 
 CREATE TABLE `admin` (
 admin_id int(11) NOT NULL AUTO_INCREMENT,
