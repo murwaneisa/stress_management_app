@@ -23,9 +23,9 @@ user_studystart int(4),
 PRIMARY KEY (user_id))ENGINE=INNODB;
 
 INSERT INTO `user` (user_id,user_username,user_firstname,user_lastname,user_gender,user_email, user_program,user_degree,user_password,user_dob,user_studystart)
-VALUES (1,'test','Test','User','X','test@hotmail.com','Computer Science','Bachelor','test','1900-1-1',2021),
-(2,'meisa','Murwan','Eisa','M','meisa@hotmail.com','Computer Science','Bachelor','welcome123','1990-1-1',2021),
-(3,'ctoth','Cameron','Toth','F','toth123@hotmail.com','Computer Science','Bachelor','hallo','1995-1-1',2021);
+VALUES (1,'test','Test','User','X','test@hotmail.com','Computer Science','Bachelor','$2b$12$Cq/7WpaizowelsSrmMBidOIAKdzhrLiPSxsBLTcGncXWkaBoNYiE.','1900-1-1',2021),
+(2,'meisa','Murwan','Eisa','M','meisa@hotmail.com','Computer Science','Bachelor','$2b$12$JVwVF/ESZdfwPM5jQBm6e.1Kdpjaxi7Fp4ek1loIAgW1rNpxXSgWO','1990-1-1',2021),
+(3,'ctoth','Cameron','Toth','F','toth123@hotmail.com','Computer Science','Bachelor','$2b$12$stBRqc3Bw4Oaao/T2yONte/bPWgJ5UuodnWFJsAJj6EVRe8lHKVyu','1995-1-1',2021);
 
 
 -- Create Stats table --
@@ -74,7 +74,7 @@ admin_password varchar(100),
 PRIMARY KEY (admin_id))ENGINE=INNODB;
 
 INSERT INTO `admin` (admin_id,admin_username,admin_firstname,admin_lastname,admin_email,admin_password)
-VALUES (1,'kallej','Kalle','Johan','kallej@hotmail.com','test');
+VALUES (1,'kallej','Kalle','Johan','kallej@hotmail.com','$2b$12$RGPABi7kzqkRSbjdaRYAw.hCfjOcMkEHOJzA.N3FnsTwC4GPa5xhC');
 
 
 CREATE TABLE `avg_stats` (
