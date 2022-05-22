@@ -1,12 +1,7 @@
-# signup widget
 from datetime import datetime
 import streamlit as st
 import streamlit_authenticator as stauth
 import global_vars
-# import encryption
-
-# import streamlit_authenticator as stauth
-# import styles
 
 
 class Signup:
@@ -18,7 +13,7 @@ class Signup:
         self.email = None
         self.program = None
         self.degree = None
-        self.password = None
+        self.password = []
         self.bday = None
         self.study_year = None
         self.connector = connector
@@ -59,23 +54,21 @@ class Signup:
             key="study-year",
         )
         self.username = st.text_input(
-            "Username",
-            max_chars=70,
-            key="username",
-            autocomplete="username",
+            "Username", max_chars=70, autocomplete="username"
         )
-        self.password = st.text_input(
+        self.password.append((st.text_input(
             "Password",
             max_chars=70,
             key="psw",
             type="password",
             autocomplete="new-password",
-        )
+        )))
 
     def on_confirm(self):
         if st.button("Confirm and sign up"):
             password = stauth.Hasher(self.password).generate()
             self.connector.insert_user(
+                self.username,
                 self.first_name,
                 self.last_name,
                 self.gender,

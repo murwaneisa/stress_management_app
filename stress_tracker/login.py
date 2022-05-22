@@ -6,7 +6,6 @@ import weekly_log, mood_log, signup, connector, history, avg_weekplan, studentst
 import tips
 import global_vars
 import stress_ai
-import encryption
 
 
 # page config
@@ -50,13 +49,14 @@ login_ids = userids + adminids
 
 
 # encrypt passwords
-hashed_passwords = stauth.Hasher(passwords).generate()
+# hashed_passwords = stauth.Hasher(passwords).generate()
+# st.write(hashed_passwords)
 
 # authenticator
 authenticator = stauth.Authenticate(
     login_ids,
     login_names,
-    hashed_passwords,
+    passwords,
     'some_cookie_name',
     'some_signature_key',
     cookie_expiry_days=30)
@@ -103,9 +103,8 @@ if authentication_status:
         else:
             give_feedback = True
 
-
         # init classes
-        weeklog = weekly_log.WeeklyLog(db, user_id,year,weeknr)
+        weeklog = weekly_log.WeeklyLog(db, user_id, year, weeknr)
         moodlog = mood_log.MoodLog()
         tips = tips.Tips(db)
         history = history.History()
@@ -251,7 +250,7 @@ if authentication_status:
     elif webpage == "Tips":
         user_info = db.getUserData("user", user_id)
         user_stats = db.getUserData("stats", user_id)
-        
+
         tips.showTips(user_info, user_stats)
 
     elif webpage == "Stress AI":
@@ -273,7 +272,12 @@ elif authentication_status is False:
 
 elif authentication_status is None:
     st.warning('Please enter your username and password, or sign up below!')
-    if st.button("Sign up"):
+    signup_button = st.button("Sign up")
+    if 'signup_active' not in st.session_state:
+        st.session_state['signup_active'] = False
+    if signup_button:
+        st.session_state['signup_active'] = True
+    if st.session_state['signup_active']:
         st.header("Sign up")
         signup.signup()
-        newemail, newpsw = signup.on_confirm()
+        newuser, newpsw = signup.on_confirm()
