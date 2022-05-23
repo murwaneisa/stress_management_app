@@ -66,7 +66,7 @@ class Signup:
 
     def on_confirm(self):
         if st.button("Confirm and sign up"):
-            password = stauth.Hasher(self.password).generate()
+            password = stauth.Hasher(self.password).generate()[0]
             self.connector.insert_user(
                 self.username,
                 self.first_name,
@@ -74,9 +74,9 @@ class Signup:
                 self.gender,
                 self.email,
                 self.program,
-                self.level,
+                self.degree,
                 password,
                 self.bday,
                 self.study_year,
             )
-        return self.username, self.password
+        # return self.username, self.password

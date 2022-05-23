@@ -280,4 +280,5 @@ elif authentication_status is None:
     if st.session_state['signup_active']:
         st.header("Sign up")
         signup.signup()
-        newuser, newpsw = signup.on_confirm()
+        # newuser, newpsw =
+        signup.on_confirm()
