@@ -81,18 +81,17 @@ if authentication_status:
         user_stats = db.getUserData("stats", user_id)
         user_info = db.getUserData("user", user_id)
 
+        # get current year and last weeknr
+        current_date = dt.date.today()
+        weeknr = current_date.isocalendar()[1] - 1
+        year = current_date.isocalendar()[0]
+        if weeknr == 0:
+            year -= 1
+            date = dt.date(year, 12, 31)
+            weeknr = date.isocalendar()[1]
+
         # check if user has stats
         if len(user_stats["stats_id"]) > 0:
-            # get current year and last weeknr
-            current_date = dt.date.today()
-            weeknr = current_date.isocalendar()[1] - 1
-            year = current_date.isocalendar()[0]
-
-            if weeknr == 0:
-                year -= 1
-                date = dt.date(year, 12, 31)
-                weeknr = date.isocalendar()[1]
-
             lastrec_year = user_stats['stats_year'][-1]
             lastrec_weeknr = user_stats['stats_weeknr'][-1]
 

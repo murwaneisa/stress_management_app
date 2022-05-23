@@ -66,17 +66,19 @@ class Signup:
 
     def on_confirm(self):
         if st.button("Confirm and sign up"):
-            password = stauth.Hasher(self.password).generate()[0]
-            self.connector.insert_user(
-                self.username,
-                self.first_name,
-                self.last_name,
-                self.gender,
-                self.email,
-                self.program,
-                self.degree,
-                password,
-                self.bday,
-                self.study_year,
-            )
-        # return self.username, self.password
+            values = {}
+            values["user_username"] = [self.username,"str"]
+            values["user_firstname"] =[self.first_name,"str"]
+            values["user_lastname"] = [self.last_name,"str"]
+            values["user_gender"] = [self.gender,"str"]
+            values["user_email"] = [self.email,"str"]
+            values["user_program"] = [self.program,"str"]
+            values["user_degree"] = [self.degree,"str"]
+            values["user_password"] = [stauth.Hasher(self.password).generate()[0],"str"]
+            values["user_dob"] = [self.bday,"str"]
+            values["user_studystart"] = [self.study_year,"str"]
+
+            print(values)
+
+            self.connector.insertData(values, "user")
+

@@ -37,6 +37,6 @@ course_options =   ('Agriculture',
                     'Sociology',
                     'Visual arts')
 
-degree_options = ("Bachelor's (first cycle)",
-                  "Master's (second cycle)",
+degree_options = ("Bachelors (first cycle)",
+                  "Masters (second cycle)",
                   "Doctorate")

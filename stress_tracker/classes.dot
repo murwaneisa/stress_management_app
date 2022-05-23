@@ -1,0 +1,5 @@
+digraph "classes" {
+rankdir=BT
+charset="utf-8"
+"stress_ai.Stress_ai" [color="black", fontcolor="black", label="{Stress_ai|userdata\luserstats\l|ai_widget()\lget_ai_stress_level(ai_data)\l}", shape="record", style="solid"];
+}

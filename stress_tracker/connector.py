@@ -132,6 +132,7 @@ class Database:
         text_values = text_values[0:-1]+")"
 
         sql = "INSERT INTO "+table+text_names+text_values
+        print(sql)
 
         mc.execute(sql)
         self.connector.commit()
