@@ -22,6 +22,7 @@ class History:
         st.subheader("Here you can see an overview of your statistics")
 
         st.write("These statistics are based on *%s* weeks." % str(len(user_stats["stats_id"])))
+        st.write("y: hours per week,   x: week number")
 
         activities = {'sleep': "avg. per day",
                       'study': "hours a week",
@@ -44,10 +45,14 @@ class History:
                 avg_v = round(self.avg(values), 1)
                 delta_v = round(avg_v - self.avg(values[0:-1]), 1)
 
-            st.metric(label, avg_v, delta_v, "inverse")
-            weeks = {"week_1": [1, 3, 5, 1, 2, 7, 2, 10],
-                     "week_2": [3, 3, 0, 7, 2, 8, 4, 5],
-                     "week_3": [5, 8, 3, 2, 0, 7, 6, 10]}
+            st.metric(label, avg_v, delta_v, delta_color="off")
 
-            chart_data = pd.DataFrame(data=weeks)
-            st.line_chart(data=chart_data, height=150)
+            data = pd.DataFrame(data=values)
+            st.line_chart(data=data, height=150)
+
+        # Display a line chart of all comparable values
+        st.subheader("A graph of all your past logs")
+        lst = ["stats_study", "stats_work", "stats_social", "stats_sport", "stats_hobby"]
+        all_weeks = {key: value for (key, value) in user_stats.items() if key in lst}
+        chart_data = pd.DataFrame(data=all_weeks)
+        st.line_chart(data=chart_data)
