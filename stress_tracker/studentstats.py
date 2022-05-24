@@ -108,12 +108,14 @@ class StudentStatistics:
                     low_result = 0
                     high_result = 0
 
+
                     for r in result:
+                        print(r)
                         b = "normal"
-                        if r[4] < boundary[0]:
+                        if r[5] < boundary[0]:
                             b = "below"
                             low_result += 1
-                        elif r[4] > boundary[1]:
+                        elif r[5] > boundary[1]:
                             b = "above"
                             high_result += 1
 
