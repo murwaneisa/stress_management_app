@@ -30,7 +30,7 @@ class AvgWeekplan:
 
     # set avarage weekplan widget
     def weekplan(self, program, degree):
-        period = {"avg. per day": [0, 20], "hours per week": [0, 60]}
+        period = {"avg. per day": [0, 20], "hours a week": [0, 60]}
         activities = {'sleep': "avg. per day",
                       'study': "hours a week",
                       'work': "hours a week",

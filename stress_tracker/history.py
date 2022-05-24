@@ -30,10 +30,14 @@ class History:
                       'social': "hours a week",
                       'hobby': "hours a week"}
 
+        week_index = user_stats["stats_weeknr"]
         for a in activities:
             values = user_stats["stats_"+a]
-            print(values)
             label = a.upper() + " ("+activities[a]+")"
+
+            data = pd.DataFrame(data=values,index=week_index)
+            data.sort_index(inplace=True)
+            values = list(data[0])
 
             if len(values) == 0:
                 avg_v = "-"
@@ -46,13 +50,11 @@ class History:
                 delta_v = round(avg_v - self.avg(values[0:-1]), 1)
 
             st.metric(label, avg_v, delta_v, delta_color="off")
-
-            data = pd.DataFrame(data=values)
             st.line_chart(data=data, height=150)
 
         # Display a line chart of all comparable values
         st.subheader("A graph of all your past logs")
         lst = ["stats_study", "stats_work", "stats_social", "stats_sport", "stats_hobby"]
         all_weeks = {key: value for (key, value) in user_stats.items() if key in lst}
-        chart_data = pd.DataFrame(data=all_weeks)
+        chart_data = pd.DataFrame(data=all_weeks,index=week_index)
         st.line_chart(data=chart_data)
